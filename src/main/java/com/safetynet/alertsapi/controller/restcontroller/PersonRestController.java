@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/person")
 public class PersonRestController {
 
+    // ajouter une nouvelle personne
     @PostMapping
     public void addPerson() {
 
     }
 
+    // modifier une personne par son nom et prénom
     @PutMapping
     public void updatePerson() {
 
     }
 
+    // supprimer une personne par son nom et prénom
     @DeleteMapping
     public void deletePerson() {
 
