@@ -12,7 +12,7 @@ public class FirestationRestController {
 
     // ajout d'un mapping caserne/adresse
     @PostMapping
-    public void getFirestation() {
+    public void addFirestation() {
 
     }
 
