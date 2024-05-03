@@ -6,11 +6,14 @@ import com.safetynet.alertsapi.model.MedicalRecord;
 
 public interface MedicalRecordRepository {
 
-    List<String> findAll();
+    List<MedicalRecord> findAll();
 
     MedicalRecord findByFirstnameAndLastname(String firstname, String lastname);
 
     void save(MedicalRecord medicalRecord);
 
+    void update(MedicalRecord updateMedicalrecord);
+
     void delete(MedicalRecord medicalRecord);
+
 }

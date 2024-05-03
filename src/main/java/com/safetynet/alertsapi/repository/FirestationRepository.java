@@ -6,13 +6,16 @@ import com.safetynet.alertsapi.model.Firestation;
 
 public interface FirestationRepository {
 
-    List<String> findAll();
+    List<Firestation> findAll();
 
-    List<String> findByStationNumber(int stationNumber);
+    List<Firestation> findByStationNumber(String stationNumber);
 
     void save(Firestation firestation);
 
+    void update(Firestation updatefirestation);
+
     void delete(Firestation firestation);
 
-    List<String> findByAddress(String address);
+    Firestation findByAddress(String address);
+
 }
