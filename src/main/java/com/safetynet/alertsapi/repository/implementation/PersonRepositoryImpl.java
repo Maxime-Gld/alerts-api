@@ -16,6 +16,10 @@ public class PersonRepositoryImpl implements PersonRepository {
         persons = LoaderUtils.loadListFromFile(new File(FilePathConstant.JSON_FILE_PATH), Person.class, "persons");
     }
 
+    public PersonRepositoryImpl(List<Person> personsList) {
+        this.persons = personsList;
+    }
+
     @Override
     public List<Person> findAll() {
         return persons;
@@ -44,7 +48,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         Person person = findByFirstnameAndLastname(updatePerson.getFirstName(), updatePerson.getLastName());
         if (person != null) {
             persons.remove(person);
-            persons.add(person);
+            persons.add(updatePerson);
         }
         // que faire en cas d'erreur ?
     }
@@ -76,31 +80,5 @@ public class PersonRepositoryImpl implements PersonRepository {
             return null;
         }
         return personsByLastname;
-    }
-
-    // test
-    public static void main(String[] args) {
-
-        PersonRepository personRepository = new PersonRepositoryImpl();
-        Person person = new Person();
-        person.setFirstName("Max");
-        person.setLastName("Test");
-        person.setAddress("123 rue du test");
-        person.setCity("Testcity");
-        person.setZip("97300");
-        person.setPhone("123-456-7890");
-        person.setEmail("test@me.com");
-
-        System.out.println("\n person not found by firstname and lastname : "
-                + personRepository.findByFirstnameAndLastname("Max", "Test"));
-        personRepository.save(person);
-        System.out.println("\n Person found by firstname and lastname : "
-                + personRepository.findByFirstnameAndLastname("Max", "Test"));
-        // by adress
-        System.out.println("\n Person found by address : " + personRepository.findByAddress("1509 Culver St"));
-        System.out.println("\n Person not found by address : " + personRepository.findByAddress("pas d'address"));
-        // by lastname
-        System.out.println("\n Person found by lastname : " + personRepository.findByLastname("Boyd"));
-        System.out.println("\n Person not found by lastname : " + personRepository.findByLastname("pas de nom"));
     }
 }

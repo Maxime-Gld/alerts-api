@@ -17,6 +17,10 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 .loadListFromFile(new File(FilePathConstant.JSON_FILE_PATH), MedicalRecord.class, "medicalrecords");
     }
 
+    public MedicalRecordRepositoryImpl(List<MedicalRecord> medicalRecordsList) {
+        this.medicalRecords = medicalRecordsList;
+    }
+
     @Override
     public List<MedicalRecord> findAll() {
         return medicalRecords;
@@ -46,7 +50,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 updateMedicalrecord.getLastName());
         if (medicalrecord != null) {
             medicalRecords.remove(medicalrecord);
-            medicalRecords.add(medicalrecord);
+            medicalRecords.add(updateMedicalrecord);
         }
         // que faire en cas d'erreur ?
     }

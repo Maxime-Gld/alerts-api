@@ -17,6 +17,10 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .loadListFromFile(new File(FilePathConstant.JSON_FILE_PATH), Firestation.class, "firestations");
     }
 
+    public FirestationRepositoryImpl(List<Firestation> firestationsList) {
+        this.firestations = firestationsList;
+    }
+
     @Override
     public List<Firestation> findAll() {
         return firestations;
