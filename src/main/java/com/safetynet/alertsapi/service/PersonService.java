@@ -2,9 +2,12 @@ package com.safetynet.alertsapi.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.Person;
 
+@Service
 public class PersonService {
 
     public List<Person> getChildsByAddress(String address) {
