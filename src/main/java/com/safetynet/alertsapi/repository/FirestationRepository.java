@@ -8,7 +8,7 @@ public interface FirestationRepository {
 
     List<Firestation> findAll();
 
-    List<Firestation> findByStationNumber(String stationNumber);
+    Firestation findByStationNumber(String stationNumber);
 
     void save(Firestation firestation);
 

@@ -69,12 +69,11 @@ public class FirestationRepositoryTest {
         String stationNumber = "1";
 
         // When
-        List<Firestation> foundFirestations = firestationRepository.findByStationNumber(stationNumber);
+        Firestation foundFirestation = firestationRepository.findByStationNumber(stationNumber);
 
         // Then
-        assertNotNull(foundFirestations);
-        assertFalse(foundFirestations.isEmpty());
-        assertEquals(stationNumber, foundFirestations.get(0).getStation());
+        assertNotNull(foundFirestation);
+        assertEquals(stationNumber, foundFirestation.getStation());
     }
 
     @Test
@@ -83,10 +82,10 @@ public class FirestationRepositoryTest {
         String stationNumber = "4";
 
         // When
-        List<Firestation> foundFirestations = firestationRepository.findByStationNumber(stationNumber);
+        Firestation foundFirestation = firestationRepository.findByStationNumber(stationNumber);
 
         // Then
-        assertNull(foundFirestations);
+        assertNull(foundFirestation);
     }
 
     @Test
@@ -96,7 +95,6 @@ public class FirestationRepositoryTest {
 
         // When
         firestationRepository.save(newFirestation);
-
         List<Firestation> firestations = firestationRepository.findAll();
 
         // Then
@@ -108,9 +106,9 @@ public class FirestationRepositoryTest {
         // Given
         Firestation firestationBeforeUpdate = firestations.get(0); // station 1
         Firestation updateFirestation = new Firestation("540 Main St", "1");
+        
         // When
         firestationRepository.update(updateFirestation);
-
         List<Firestation> firestations = firestationRepository.findAll();
 
         // Then
@@ -122,6 +120,7 @@ public class FirestationRepositoryTest {
     public void testDelete() {
         // Given
         Firestation firestationToDelete = firestations.get(0); // station 1
+
         // When
         firestationRepository.delete(firestationToDelete);
 
