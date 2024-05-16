@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.safetynet.alertsapi.controller.restcontroller.MedicalRecordRestController;
+import com.safetynet.alertsapi.restcontroller.MedicalRecordRestController;
 
 @WebMvcTest(MedicalRecordRestController.class)
 public class MedicalRecordRestControllerTest {

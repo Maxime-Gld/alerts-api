@@ -35,6 +35,7 @@ public class FirestationRestControllerTest {
     @Test
     public void testAddFirestation() throws Exception {
 
+        List<Firestation> firestationsBeforeTest = firestationRepository.findAll();
         String newFirestationJson = "{\"address\": \"test\", \"station\": \"40\"}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
@@ -43,6 +44,8 @@ public class FirestationRestControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk());
 
         List<Firestation> firestations = firestationRepository.findAll();
+
+        // TODO : vérifier que le nombre de firestation est bien +1 (changer la facon de faire)
             
     }
 
