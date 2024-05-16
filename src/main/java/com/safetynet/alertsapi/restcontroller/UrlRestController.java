@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
+import com.safetynet.alertsapi.dto.ResponseFireDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
+import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
 import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.service.PersonService;
@@ -35,15 +37,15 @@ public class UrlRestController {
     }
 
     @GetMapping("/phoneAlert")
-    public ResponseEntity<?> getPhonesByStationNumber(@RequestParam("firestation") String stationNumber) {
-        List<String> phones = personService.getPhonesByStationNumber(stationNumber);
-        return ResponseEntity.ok(phones);
+    public ResponsePhoneAlertDTO getPhonesByStationNumber(@RequestParam("firestation") String stationNumber) {
+        ResponsePhoneAlertDTO phones = personService.getPhonesByStationNumber(stationNumber);
+        return phones;
     }
 
     @GetMapping("/fire")
-    public ResponseEntity<?> getPersonsByAdress(@RequestParam("address") String address) {
-        List<Person> people = personService.getPersonsByAdress(address);
-        return ResponseEntity.ok(people);
+    public ResponseFireDTO getPersonsByAdress(@RequestParam("address") String address) {
+        ResponseFireDTO people = personService.getPersonsByAdress(address);
+        return people;
     }
 
     @GetMapping("/flood")
