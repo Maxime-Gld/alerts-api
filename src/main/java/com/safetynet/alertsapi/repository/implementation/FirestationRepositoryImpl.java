@@ -3,11 +3,14 @@ package com.safetynet.alertsapi.repository.implementation;
 import java.io.File;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.safetynet.alertsapi.config.constant.FilePathConstant;
 import com.safetynet.alertsapi.model.Firestation;
 import com.safetynet.alertsapi.repository.FirestationRepository;
 import com.safetynet.alertsapi.utils.LoaderUtils;
 
+@Repository
 public class FirestationRepositoryImpl implements FirestationRepository {
 
     private List<Firestation> firestations;
@@ -52,7 +55,6 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public Firestation findByAddress(String address) {
-        firestations = findAll();
         for (Firestation firestation : firestations) {
             if (firestation.getAddress().equals(address)) {
                 return firestation;
@@ -63,7 +65,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public Firestation findByStationNumber(String stationNumber) {
-        firestations = findAll();
+
         for (Firestation firestation : firestations) {
             if (firestation.getStation().equals(stationNumber)) {
                 return firestation;

@@ -2,8 +2,11 @@ package com.safetynet.alertsapi.repository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.safetynet.alertsapi.model.Person;
 
+@Repository
 public interface PersonRepository {
 
     List<Person> findAll();

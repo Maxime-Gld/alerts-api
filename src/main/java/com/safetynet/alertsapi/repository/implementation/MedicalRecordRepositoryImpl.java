@@ -3,11 +3,14 @@ package com.safetynet.alertsapi.repository.implementation;
 import java.io.File;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.safetynet.alertsapi.config.constant.FilePathConstant;
 import com.safetynet.alertsapi.model.MedicalRecord;
 import com.safetynet.alertsapi.repository.MedicalRecordRepository;
 import com.safetynet.alertsapi.utils.LoaderUtils;
 
+@Repository
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
     private List<MedicalRecord> medicalRecords;
