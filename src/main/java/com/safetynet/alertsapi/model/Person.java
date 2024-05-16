@@ -1,5 +1,7 @@
 package com.safetynet.alertsapi.model;
 
+import com.safetynet.alertsapi.interfaces.PersonInfo;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
+public class Person implements PersonInfo {
 
     private String firstName;
 
