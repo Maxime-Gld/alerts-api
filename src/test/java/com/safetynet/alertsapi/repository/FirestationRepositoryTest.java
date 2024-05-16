@@ -15,14 +15,14 @@ import com.safetynet.alertsapi.repository.implementation.FirestationRepositoryIm
 public class FirestationRepositoryTest {
     
     private FirestationRepository firestationRepository;
-    private List<Firestation> firestations = new ArrayList<>(Arrays.asList(
-        new Firestation("123 Main St", "1"),
-        new Firestation("456 Elm St", "2"),
-        new Firestation("789 Oak St", "3")
-    ));
-
+    
     @BeforeEach
     public void setUp() {
+        List<Firestation> firestations = new ArrayList<>(Arrays.asList(
+            new Firestation("123 Main St", "1"),
+            new Firestation("456 Elm St", "2"),
+            new Firestation("789 Oak St", "3")
+        ));
         firestationRepository = new FirestationRepositoryImpl(firestations);
     }
 
@@ -92,11 +92,11 @@ public class FirestationRepositoryTest {
     public void testSave() {
         // Given
         Firestation newFirestation = new Firestation("999 Main St", "4");
-
+        
         // When
         firestationRepository.save(newFirestation);
+        
         List<Firestation> firestations = firestationRepository.findAll();
-
         // Then
         assertTrue(firestations.contains(newFirestation));
     }
@@ -104,12 +104,12 @@ public class FirestationRepositoryTest {
     @Test
     public void testUpdate() {
         // Given
+        List<Firestation> firestations = firestationRepository.findAll();
         Firestation firestationBeforeUpdate = firestations.get(0); // station 1
         Firestation updateFirestation = new Firestation("540 Main St", "1");
-        
+
         // When
         firestationRepository.update(updateFirestation);
-        List<Firestation> firestations = firestationRepository.findAll();
 
         // Then
         assertFalse(firestations.contains(firestationBeforeUpdate));
@@ -119,12 +119,12 @@ public class FirestationRepositoryTest {
     @Test
     public void testDelete() {
         // Given
+        List<Firestation> firestations = firestationRepository.findAll();
         Firestation firestationToDelete = firestations.get(0); // station 1
 
         // When
         firestationRepository.delete(firestationToDelete);
 
-        List<Firestation> firestations = firestationRepository.findAll();
 
         // Then
         assertFalse(firestations.contains(firestationToDelete));

@@ -16,16 +16,16 @@ public class MedicalRecordRepositoryTest {
     
     private MedicalRecordRepository medicalRecordRepository;
 
-    private List<MedicalRecord> medicalRecords = new ArrayList<>(Arrays.asList(
-        new MedicalRecord("John", "Doe", "01/01/1970", new ArrayList<String>(), new ArrayList<String>()),
-        new MedicalRecord("Jane", "Smith", "01/01/1975", new ArrayList<String>(), new ArrayList<String>()),
-        new MedicalRecord("Bob", "Doe", "01/01/2000", new ArrayList<String>(), new ArrayList<String>()),
-        new MedicalRecord("Alice", "Johnson", "01/01/1982", new ArrayList<String>(), new ArrayList<String>()),
-        new MedicalRecord("Mark", "Jobert", "01/01/1990", new ArrayList<String>(), new ArrayList<String>())
-    ));
-
+    
     @BeforeEach
     void setUp() {
+        List<MedicalRecord> medicalRecords = new ArrayList<>(Arrays.asList(
+            new MedicalRecord("John", "Doe", "01/01/1970", new ArrayList<String>(), new ArrayList<String>()),
+            new MedicalRecord("Jane", "Smith", "01/01/1975", new ArrayList<String>(), new ArrayList<String>()),
+            new MedicalRecord("Bob", "Doe", "01/01/2000", new ArrayList<String>(), new ArrayList<String>()),
+            new MedicalRecord("Alice", "Johnson", "01/01/1982", new ArrayList<String>(), new ArrayList<String>()),
+            new MedicalRecord("Mark", "Jobert", "01/01/1990", new ArrayList<String>(), new ArrayList<String>())
+        ));
         medicalRecordRepository = new MedicalRecordRepositoryImpl(medicalRecords);
     }
 
@@ -77,7 +77,6 @@ public class MedicalRecordRepositoryTest {
 
         // When
         medicalRecordRepository.save(newMedicalRecord);
-
         List<MedicalRecord> medicalRecords = medicalRecordRepository.findAll();
 
         // Then
@@ -87,13 +86,12 @@ public class MedicalRecordRepositoryTest {
     @Test
     void testUpdate() {
         // Given
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAll();
         MedicalRecord medicalRecordBeforeUpdate = medicalRecords.get(0); // John Doe
         MedicalRecord updateMedicalRecord = new MedicalRecord("John", "Doe", "05/05/2005", new ArrayList<String>(), new ArrayList<String>());
 
         // When
         medicalRecordRepository.update(updateMedicalRecord);
-
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAll();
 
         // Then
         assertTrue(medicalRecords.contains(updateMedicalRecord));
@@ -103,12 +101,11 @@ public class MedicalRecordRepositoryTest {
     @Test
     void testDelete() {
         // Given
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAll();
         MedicalRecord medicalRecordToDelete = medicalRecords.get(0); // John Doe
 
         // When
         medicalRecordRepository.delete(medicalRecordToDelete);
-
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAll();
 
         // Then
         assertFalse(medicalRecords.contains(medicalRecordToDelete));
