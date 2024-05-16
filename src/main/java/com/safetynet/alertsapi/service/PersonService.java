@@ -3,12 +3,15 @@ package com.safetynet.alertsapi.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.safetynet.alertsapi.dto.PersonResponseFirestationDTO;
+import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
+import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
+import com.safetynet.alertsapi.dto.persondto.PersonResponseFirestationDTO;
 import com.safetynet.alertsapi.interfaces.PersonInfo;
 import com.safetynet.alertsapi.model.Firestation;
 import com.safetynet.alertsapi.model.HouseholdInformations;
@@ -64,9 +67,33 @@ public class PersonService {
         return response;
     }
 
-    public List<Person> getChildsByAddress(String address) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getChildsByAddress'");
+    public Optional<ResponseChildAlertDTO> getChildsByAddress(String address) {
+        // on récupère la liste des personnes par adresse
+        List<Person> personsByAddress = personRepository.findByAddress(address);
+
+        // pour chaque personne trouvé, on récupère son nom, prénom et on calcul son age
+        List<PersonResponseChildAlertDTO> personsInformations = personsByAddress.stream().map(p -> {
+            PersonResponseChildAlertDTO personDTO = new PersonResponseChildAlertDTO();
+            personDTO.setFirstName(p.getFirstName());
+            personDTO.setLastName(p.getLastName());
+            MedicalRecord medicalRecord = medicalRecordRepository.findByFirstnameAndLastname(p.getFirstName(), p.getLastName());
+            personDTO.setAge(getAge(medicalRecord));
+            return personDTO;
+        }).collect(Collectors.toList());
+        
+        // on filtre pour séparer les enfants et les adultes
+        List<PersonResponseChildAlertDTO> children = personsInformations.stream().filter(p -> isAChild(p)).toList();
+        List<PersonResponseChildAlertDTO> adults = personsInformations.stream().filter(p -> !isAChild(p)).toList();
+        
+        if (children.isEmpty()) {
+            return Optional.empty();
+        }
+
+        ResponseChildAlertDTO response = new ResponseChildAlertDTO();
+        response.setChildren(children);
+        response.setAdults(adults);
+
+        return Optional.of(response);
     }
 
     public List<String> getPhonesByStationNumber(String stationNumber) {
@@ -99,18 +126,22 @@ public class PersonService {
         String lastName = person.getLastName();
         MedicalRecord medicalRecord = medicalRecordRepository.findByFirstnameAndLastname(firstName, lastName);
         if (medicalRecord != null) {
-            String birthDate = medicalRecord.getBirthdate();
-            LocalDate birthdate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-            LocalDate now = LocalDate.now();
-            int age = now.getYear() - birthdate.getYear();
+            int age = getAge(medicalRecord);
             return age < 18;
         }
         return false;
     }
 
+    private int getAge(MedicalRecord medicalRecord) {
+        String birthDate = medicalRecord.getBirthdate();
+        LocalDate birthdate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        LocalDate now = LocalDate.now();
+        return now.getYear() - birthdate.getYear();
+    }
+
     public static void main(String[] args) {
 
         // tester la methode getPersonsByStationNumber
-        
+
     }
 }

@@ -1,6 +1,7 @@
 package com.safetynet.alertsapi.restcontroller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.Person;
@@ -26,9 +28,10 @@ public class UrlRestController {
     }
 
     @GetMapping("/childAlert")
-    public ResponseEntity<?> getChildsByAddress(@RequestParam("address") String address) {
-        List<Person> childList = personService.getChildsByAddress(address);
-        return ResponseEntity.ok(childList);
+    public Optional<ResponseChildAlertDTO> getChildsByAddress(@RequestParam("address") String address) {
+        System.out.println("address : " + address);
+        Optional<ResponseChildAlertDTO> childList = personService.getChildsByAddress(address);
+        return childList;
     }
 
     @GetMapping("/phoneAlert")
