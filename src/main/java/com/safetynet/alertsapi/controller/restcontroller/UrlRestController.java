@@ -1,27 +1,28 @@
-package com.safetynet.alertsapi.controller;
+package com.safetynet.alertsapi.controller.restcontroller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.service.PersonService;
 
-@Controller
-public class PeopleAlertController {
+@RestController
+public class UrlRestController {
 
     @Autowired
     private PersonService personService;
 
     @GetMapping("/firestation")
-    public ResponseEntity<?> getPeopleByStationNumber(@RequestParam("stationNumber") String stationNumber) {
-        List<Person> people = personService.getPersonsByStationNumber(stationNumber);
-        return ResponseEntity.ok(people);
+    public ResponseFirestationDTO getPeopleByStationNumber(@RequestParam("stationNumber") String stationNumber) {
+        ResponseFirestationDTO people = personService.getPersonsByStationNumber(stationNumber);
+        return people;
     }
 
     @GetMapping("/childAlert")
