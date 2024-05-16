@@ -1,4 +1,4 @@
-package com.safetynet.alertsapi.controller.restcontroller;
+package com.safetynet.alertsapi.restcontroller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;

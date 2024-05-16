@@ -1,4 +1,4 @@
-package com.safetynet.alertsapi.controller.restcontroller;
+package com.safetynet.alertsapi.restcontroller;
 
 import java.util.List;
 
