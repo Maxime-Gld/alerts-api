@@ -2,6 +2,7 @@ package com.safetynet.alertsapi.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,14 +12,17 @@ import org.springframework.stereotype.Service;
 import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseFireDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
+import com.safetynet.alertsapi.dto.ResponseFloodDTO;
 import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
+import com.safetynet.alertsapi.dto.household.HouseholdInformationsDTO;
 import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordResponseFireDTO;
+import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordResponseFloodDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFireDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFirestationDTO;
+import com.safetynet.alertsapi.dto.persondto.PersonResponseFloodDTO;
 import com.safetynet.alertsapi.interfaces.PersonName;
 import com.safetynet.alertsapi.model.Firestation;
-import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.MedicalRecord;
 import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.repository.FirestationRepository;
@@ -42,7 +46,7 @@ public class PersonService {
     public ResponseFirestationDTO getPersonsByStationNumber(String stationNumber) {
         int child = 0;
         int adult = 0;
-
+        
         Firestation firestation = firestationRepository.findByStationNumber(stationNumber);
         List<Person> personsByStationNumber = personRepository.findByAddress(firestation.getAddress());
 
@@ -113,7 +117,7 @@ public class PersonService {
     }
 
     public ResponseFireDTO getPersonsByAdress(String address) {
-
+        
         Firestation firestation = firestationRepository.findByAddress(address);
         List<Person> personsByAddress = personRepository.findByAddress(address);
 
@@ -141,9 +145,54 @@ public class PersonService {
         return response;
     }
 
-    public List<HouseholdInformations> getHouseholdInformationsByStations(List<Integer> stations) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getHouseholdInformationsByStations'");
+    public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stations) {
+
+        List<ResponseFloodDTO> responseList = new ArrayList<>();
+        
+        
+        for (Integer stationNumber : stations) {
+            Firestation firestation = firestationRepository.findByStationNumber(stationNumber.toString());
+            
+            if (firestation == null) {
+                throw new IllegalArgumentException("Station number not found");
+            }
+            // on récupère la liste des personnes par adresse
+            List<Person> personsByStationNumber = personRepository.findByAddress(firestation.getAddress());
+            
+            // pour chaque personne, on récupère son nom, prénom et on calcul son age
+            List<PersonResponseFloodDTO> personsInformations = personsByStationNumber.stream().map(p -> {
+                // dossier medical pour la personne
+                MedicalRecord medicalRecord = medicalRecordRepository.findByFirstnameAndLastname(p.getFirstName(), p.getLastName());
+                MedicalRecordResponseFloodDTO medicalRecordDTO = new MedicalRecordResponseFloodDTO();
+                medicalRecordDTO.setAllergies(medicalRecord.getAllergies());
+                medicalRecordDTO.setMedications(medicalRecord.getMedications());
+                
+                // la personne
+                PersonResponseFloodDTO personDTO = new PersonResponseFloodDTO();
+                personDTO.setFirstName(p.getFirstName());
+                personDTO.setLastName(p.getLastName());
+                personDTO.setPhone(p.getPhone());
+                personDTO.setAge(getAge(medicalRecord));
+                personDTO.setMedicalRecord(medicalRecordDTO);
+                return personDTO;
+            }).collect(Collectors.toList());
+            
+            List<HouseholdInformationsDTO> householdInformations = personsInformations.stream().map(p -> {
+                HouseholdInformationsDTO householdInformationsDTO = new HouseholdInformationsDTO();
+                householdInformationsDTO.setAddress(firestation.getAddress());
+                householdInformationsDTO.setPersons(personsInformations);
+                return householdInformationsDTO;
+            }).collect(Collectors.toList());
+            
+            
+            ResponseFloodDTO response = new ResponseFloodDTO();
+            response.setHouseholdInformations(householdInformations);
+            response.setFirestation(firestation);
+
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     public List<String> getAllEmailsByCity(String city) {
