@@ -16,7 +16,7 @@ import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordResponseFireDTO
 import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFireDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFirestationDTO;
-import com.safetynet.alertsapi.interfaces.PersonInfo;
+import com.safetynet.alertsapi.interfaces.PersonName;
 import com.safetynet.alertsapi.model.Firestation;
 import com.safetynet.alertsapi.model.HouseholdInformations;
 import com.safetynet.alertsapi.model.MedicalRecord;
@@ -156,7 +156,7 @@ public class PersonService {
         throw new UnsupportedOperationException("Unimplemented method 'getPersonInfoByName'");
     }
 
-    private boolean isAChild(PersonInfo person) {
+    private boolean isAChild(PersonName person) {
         String firstName = person.getFirstName();
         String lastName = person.getLastName();
         MedicalRecord medicalRecord = medicalRecordRepository.findByFirstnameAndLastname(firstName, lastName);

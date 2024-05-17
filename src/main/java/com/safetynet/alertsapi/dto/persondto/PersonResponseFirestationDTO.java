@@ -1,11 +1,11 @@
 package com.safetynet.alertsapi.dto.persondto;
 
-import com.safetynet.alertsapi.interfaces.PersonInfo;
+import com.safetynet.alertsapi.interfaces.PersonName;
 
 import lombok.Data;
 
 @Data
-public class PersonResponseFirestationDTO implements PersonInfo {
+public class PersonResponseFirestationDTO implements PersonName {
 
     private String firstName;
 
