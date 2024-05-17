@@ -1,6 +1,6 @@
 package com.safetynet.alertsapi.interfaces;
 
-public interface PersonInfo {
+public interface PersonName {
     String getFirstName();
     String getLastName();
 }
