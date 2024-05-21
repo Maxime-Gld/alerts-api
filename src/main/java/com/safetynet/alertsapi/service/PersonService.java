@@ -12,9 +12,11 @@ import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseFireDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.dto.ResponseFloodDTO;
+import com.safetynet.alertsapi.dto.ResponsePersonInfoDTO;
 import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
 import com.safetynet.alertsapi.dto.household.HouseholdInformationsDTO;
 import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordBaseDTO;
+import com.safetynet.alertsapi.dto.persondto.PersonInfoDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFireDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFirestationDTO;
@@ -173,9 +175,30 @@ public class PersonService {
         throw new UnsupportedOperationException("Unimplemented method 'getAllEmailsByCity'");
     }
 
-    public Person getPersonInfoByName(String firstName, String lastName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPersonInfoByName'");
+    public ResponsePersonInfoDTO getPersonInfoByName(String firstName, String lastName) {
+
+        List<Person> persons = personRepository.findByLastname(lastName);
+
+        if (persons == null) {
+            return null;
+        }
+
+        return new ResponsePersonInfoDTO(persons.stream().map(p -> new PersonInfoDTO(
+                p.getFirstName(),
+                p.getLastName(),
+                p.getAddress(),
+                getAge(medicalRecordRepository.findByFirstnameAndLastname(
+                        p.getFirstName(),
+                        p.getLastName())),
+                p.getEmail(),
+                new MedicalRecordBaseDTO(
+                        medicalRecordRepository.findByFirstnameAndLastname(
+                                p.getFirstName(),
+                                p.getLastName()).getMedications(),
+                        medicalRecordRepository.findByFirstnameAndLastname(
+                                p.getFirstName(),
+                                p.getLastName()).getAllergies())))
+                .toList());
     }
 
     private boolean isAChild(Person person) {

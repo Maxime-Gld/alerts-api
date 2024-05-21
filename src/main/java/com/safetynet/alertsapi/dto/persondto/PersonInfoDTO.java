@@ -1,7 +1,5 @@
 package com.safetynet.alertsapi.dto.persondto;
 
-import java.util.List;
-
 import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordBaseDTO;
 
 public record PersonInfoDTO (
@@ -9,6 +7,6 @@ public record PersonInfoDTO (
     String lastName,
     String address,
     int age,
-    String phone,
-    List<MedicalRecordBaseDTO> medicalRecord
+    String email,
+    MedicalRecordBaseDTO medicalRecord
 ) {}

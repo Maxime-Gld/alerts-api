@@ -13,7 +13,9 @@ import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseFireDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.dto.ResponseFloodDTO;
+import com.safetynet.alertsapi.dto.ResponsePersonInfoDTO;
 import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
+import com.safetynet.alertsapi.dto.persondto.PersonInfoDTO;
 import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.service.PersonService;
 
@@ -54,10 +56,10 @@ public class UrlRestController {
     }
 
     @GetMapping("/personInfo")
-    public ResponseEntity<?> getInformationsByName(@RequestParam("firstName") String firstName,
+    public ResponsePersonInfoDTO getInformationsByName(@RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName) {
-        Person person = personService.getPersonInfoByName(firstName, lastName);
-        return ResponseEntity.ok(person);
+        ResponsePersonInfoDTO person = personService.getPersonInfoByName(firstName, lastName);
+        return person;
     }
 
     @GetMapping("/communityEmail")
