@@ -31,7 +31,6 @@ public class UrlRestController {
 
     @GetMapping("/childAlert")
     public Optional<ResponseChildAlertDTO> getChildsByAddress(@RequestParam("address") String address) {
-        System.out.println("address : " + address);
         Optional<ResponseChildAlertDTO> childList = personService.getChildsByAddress(address);
         return childList;
     }

@@ -1,17 +1,14 @@
 package com.safetynet.alertsapi.dto.persondto;
 
-import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordResponseFireDTO;
-import com.safetynet.alertsapi.interfaces.PersonName;
+import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordBaseDTO;
 
-import lombok.Data;
+public record PersonResponseFireDTO (
+    String firstName,
+    String lastName,
+    String phone,
+    int age,
+    MedicalRecordBaseDTO medicalRecord
+) {}
 
-@Data
-public class PersonResponseFireDTO implements PersonName {
 
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private int age;
-    private MedicalRecordResponseFireDTO medicalRecord;
 
-}

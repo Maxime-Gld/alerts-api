@@ -4,10 +4,7 @@ import java.util.List;
 
 import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
 
-import lombok.Data;
-
-@Data
-public class ResponseChildAlertDTO {
-    private List<PersonResponseChildAlertDTO> children;
-    private List<PersonResponseChildAlertDTO> adults;
-}
+public record ResponseChildAlertDTO (
+    List<PersonResponseChildAlertDTO> children,
+    List<PersonResponseChildAlertDTO> adults
+) {}

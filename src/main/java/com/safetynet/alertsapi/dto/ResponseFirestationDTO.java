@@ -4,13 +4,8 @@ import java.util.List;
 
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFirestationDTO;
 
-import lombok.Data;
-
-@Data
-public class ResponseFirestationDTO {
-    private int childCount;
-
-    private int adultCount;
-
-    private List<PersonResponseFirestationDTO> persons;
-}
+public record ResponseFirestationDTO (
+    int childCount,
+    int adultCount,
+    List<PersonResponseFirestationDTO> persons
+) {}

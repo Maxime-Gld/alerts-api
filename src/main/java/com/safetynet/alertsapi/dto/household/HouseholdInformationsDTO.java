@@ -4,11 +4,9 @@ import java.util.List;
 
 import com.safetynet.alertsapi.dto.persondto.PersonResponseFloodDTO;
 
-import lombok.Data;
-
-@Data
-public class HouseholdInformationsDTO {
+public record HouseholdInformationsDTO (
+    String address,
+    List<PersonResponseFloodDTO> persons
+) {}
     
-    private String address;
-    private List<PersonResponseFloodDTO> persons;
-}
+

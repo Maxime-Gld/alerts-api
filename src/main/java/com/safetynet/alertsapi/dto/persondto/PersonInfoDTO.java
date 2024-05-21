@@ -1,11 +1,14 @@
 package com.safetynet.alertsapi.dto.persondto;
 
+import java.util.List;
+
 import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordBaseDTO;
 
-public record PersonResponseFloodDTO (
+public record PersonInfoDTO (
     String firstName,
     String lastName,
-    String phone,
+    String address,
     int age,
-    MedicalRecordBaseDTO medicalRecord
+    String phone,
+    List<MedicalRecordBaseDTO> medicalRecord
 ) {}

@@ -2,9 +2,7 @@ package com.safetynet.alertsapi.dto;
 
 import java.util.List;
 
-import lombok.Data;
+public record ResponsePhoneAlertDTO (
+    List<String> phoneNumbers
+) {}
 
-@Data
-public class ResponsePhoneAlertDTO {
-    private List<String> phoneNumbers;
-}
