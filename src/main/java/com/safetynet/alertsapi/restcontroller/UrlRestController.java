@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
+import com.safetynet.alertsapi.dto.ResponseEmailDTO;
 import com.safetynet.alertsapi.dto.ResponseFireDTO;
 import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.dto.ResponseFloodDTO;
 import com.safetynet.alertsapi.dto.ResponsePersonInfoDTO;
 import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
-import com.safetynet.alertsapi.dto.persondto.PersonInfoDTO;
-import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.service.PersonService;
 
 @RestController
@@ -63,8 +61,8 @@ public class UrlRestController {
     }
 
     @GetMapping("/communityEmail")
-    public ResponseEntity<?> getPersonsByCity(@RequestParam("city") String city) {
-        List<String> emails = personService.getAllEmailsByCity(city);
-        return ResponseEntity.ok(emails);
+    public ResponseEmailDTO getPersonsByCity(@RequestParam("city") String city) {
+        ResponseEmailDTO emails = personService.getAllEmailsByCity(city);
+        return emails;
     }
 }

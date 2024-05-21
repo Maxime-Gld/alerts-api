@@ -23,4 +23,6 @@ public interface PersonRepository {
 
     List<Person> findByLastname(String lastname);
 
+    List<Person> findByCity(String city);
+
 }

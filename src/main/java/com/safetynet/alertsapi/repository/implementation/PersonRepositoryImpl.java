@@ -84,4 +84,14 @@ public class PersonRepositoryImpl implements PersonRepository {
         }
         return personsByLastname;
     }
+
+    @Override
+    public List<Person> findByCity(String city) {
+        persons = findAll();
+        List<Person> personsByCity = persons.stream().filter(p -> p.getCity().equals(city)).toList();
+        if (personsByCity.isEmpty()) {
+            return null;
+        }
+        return personsByCity;
+    }
 }
