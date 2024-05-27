@@ -1,5 +1,7 @@
 package com.safetynet.alertsapi.restcontroller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,8 +21,9 @@ public class FirestationRestController {
 
     // ajout d'un mapping caserne/adresse
     @PostMapping
-    public void addFirestation(@RequestBody Firestation firestation) {
-        firestationRepository.save(firestation);
+    public ResponseEntity<Firestation> addFirestation(@RequestBody Firestation firestation) {
+        Firestation newFirestation = firestationRepository.save(firestation);
+        return new ResponseEntity<>(newFirestation,HttpStatus.CREATED);
     }
 
     // mettre à jour le numéro de la caserne de pompiers d'une adresses
