@@ -1,6 +1,7 @@
 package com.safetynet.alertsapi.repository.implementation;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -30,25 +31,36 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     @Override
-    public void save(Firestation firestation) {
+    public Firestation save(Firestation firestation) {
         firestations.add(firestation);
+        return firestation;
     }
 
     @Override
-    public void update(Firestation updateFirestation) {
-        Firestation firestation = findByStationNumber(updateFirestation.getStation());
+    public Firestation update(Firestation updateFirestation) {
+        Firestation firestation = findByFirestation(updateFirestation);
         if (firestation != null) {
             firestations.remove(firestation);
             firestations.add(updateFirestation);
         }
+
+        return updateFirestation;
         // que faire en cas d'erreur ?
     }
 
     @Override
+    public Firestation findByFirestation(Firestation firestation) {
+        if (firestations.contains(firestation)) {
+            return firestation;
+        }
+        return null;
+    }
+
+    @Override
     public void delete(Firestation deleteFirestation) {
-        Firestation firestation = findByStationNumber(deleteFirestation.getStation());
-        if (firestation != null) {
-            firestations.remove(firestation);
+        List<Firestation> firestationByStationNumber = findByStationNumber(deleteFirestation.getStation());
+        if (!firestationByStationNumber.isEmpty()) {
+            firestationByStationNumber.remove(deleteFirestation);
         }
         // que faire en cas d'erreur ?
     }
@@ -64,13 +76,17 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     @Override
-    public Firestation findByStationNumber(String stationNumber) {
+    public List<Firestation> findByStationNumber(String stationNumber) {
+        
+        List<Firestation> firestationsByStationNumber = new ArrayList<>();
 
         for (Firestation firestation : firestations) {
             if (firestation.getStation().equals(stationNumber)) {
-                return firestation;
+                firestationsByStationNumber.add(firestation);
             }
+            
         }
-        return null;
+
+        return firestationsByStationNumber;
     }
 }

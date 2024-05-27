@@ -11,14 +11,16 @@ public interface FirestationRepository {
 
     List<Firestation> findAll();
 
-    Firestation findByStationNumber(String stationNumber);
+    List<Firestation> findByStationNumber(String stationNumber);
 
-    void save(Firestation firestation);
+    Firestation save(Firestation firestation);
 
-    void update(Firestation updatefirestation);
+    Firestation update(Firestation updatefirestation);
 
     void delete(Firestation firestation);
 
     Firestation findByAddress(String address);
+
+    Firestation findByFirestation(Firestation firestation);
 
 }

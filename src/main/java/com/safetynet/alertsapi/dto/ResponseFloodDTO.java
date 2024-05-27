@@ -1,9 +1,10 @@
 package com.safetynet.alertsapi.dto;
 
-import com.safetynet.alertsapi.dto.household.HouseholdInformationsDTO;
-import com.safetynet.alertsapi.model.Firestation;
+import java.util.List;
+
+import com.safetynet.alertsapi.dto.persondto.PersonResponseFloodDTO;
 
 public record ResponseFloodDTO (
-    Firestation firestation,
-    HouseholdInformationsDTO householdInformations
+    String address,
+    List<PersonResponseFloodDTO> persons
 ) {}

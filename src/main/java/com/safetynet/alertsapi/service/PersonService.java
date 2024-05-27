@@ -1,10 +1,13 @@
 package com.safetynet.alertsapi.service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,6 @@ import com.safetynet.alertsapi.dto.ResponseFirestationDTO;
 import com.safetynet.alertsapi.dto.ResponseFloodDTO;
 import com.safetynet.alertsapi.dto.ResponsePersonInfoDTO;
 import com.safetynet.alertsapi.dto.ResponsePhoneAlertDTO;
-import com.safetynet.alertsapi.dto.household.HouseholdInformationsDTO;
 import com.safetynet.alertsapi.dto.medicalrecorddto.MedicalRecordBaseDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonInfoDTO;
 import com.safetynet.alertsapi.dto.persondto.PersonResponseChildAlertDTO;
@@ -47,8 +49,15 @@ public class PersonService {
 		int child = 0;
 		int adult = 0;
 
-		Firestation firestation = firestationRepository.findByStationNumber(stationNumber);
-		List<Person> personsByStationNumber = personRepository.findByAddress(firestation.getAddress());
+		List<Person> personsByStationNumber = getPersonsListByStationNumber(stationNumber);
+
+		for (Person person : personsByStationNumber) {
+			if (isAChild(person)) {
+				child++;
+			} else {
+				adult++;
+			}
+		}
 
 		List<PersonResponseFirestationDTO> personsInformations = personsByStationNumber.stream()
 				.map(p -> new PersonResponseFirestationDTO(
@@ -58,13 +67,6 @@ public class PersonService {
 						p.getPhone()))
 				.toList();
 
-		for (Person person : personsByStationNumber) {
-			if (isAChild(person)) {
-				child++;
-			} else {
-				adult++;
-			}
-		}
 
 		return new ResponseFirestationDTO(child, adult, personsInformations);
 	}
@@ -105,9 +107,8 @@ public class PersonService {
 	}
 
 	public ResponsePhoneAlertDTO getPhonesByStationNumber(String stationNumber) {
-		Firestation firestation = firestationRepository.findByStationNumber(stationNumber);
-		List<Person> personsByStationNumber = personRepository.findByAddress(firestation.getAddress());
 
+		List<Person> personsByStationNumber = getPersonsListByStationNumber(stationNumber);
 		List<String> phoneNumbers = personsByStationNumber.stream().map(p -> p.getPhone()).toList();
 
 		return new ResponsePhoneAlertDTO(phoneNumbers);
@@ -138,41 +139,49 @@ public class PersonService {
 		return new ResponseFireDTO(firestation, personsInformations);
 	}
 
-	public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stations) {
-		List<ResponseFloodDTO> responseFloodDTOList = new ArrayList<>();
-
-		for (Integer station : stations) {
-			Firestation firestation = firestationRepository.findByStationNumber(station.toString());
-			List<Person> personsByStationNumber = personRepository.findByAddress(firestation.getAddress());
-
-			List<PersonResponseFloodDTO> personsInformations = personsByStationNumber.stream()
-					.map(p -> new PersonResponseFloodDTO(p.getFirstName(),
-							p.getLastName(),
-							p.getPhone(),
-							getAge(medicalRecordRepository.findByFirstnameAndLastname(
-									p.getFirstName(),
-									p.getLastName())),
-							new MedicalRecordBaseDTO(
-									medicalRecordRepository
-											.findByFirstnameAndLastname(
-													p.getFirstName(),
-													p.getLastName())
-											.getMedications(),
-									medicalRecordRepository
-											.findByFirstnameAndLastname(
-													p.getFirstName(),
-													p.getLastName())
-											.getAllergies())))
-					.toList();
-
-			HouseholdInformationsDTO householdInformations = new HouseholdInformationsDTO(
-					firestation.getAddress(),
-					personsInformations);
-
-			responseFloodDTOList.add(new ResponseFloodDTO(firestation, householdInformations));
+	public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stationNumbers) {
+		List<ResponseFloodDTO> householdInformationsList = new ArrayList<>();
+		for (Integer stationNumber : stationNumbers) {
+			List<Person> personsByStationNumber = getPersonsListByStationNumber(stationNumber.toString());
+			Map<String, List<PersonResponseFloodDTO>> personsByAddress = mapPersonsToAddressAndPersonResponseFloodDTO(personsByStationNumber);
+			List<ResponseFloodDTO> householdInformations = createResponseFloodDTOList(personsByAddress);
+            householdInformationsList.addAll(householdInformations);
 		}
+		
+		return householdInformationsList;
+	}
 
-		return responseFloodDTOList;
+	private List<ResponseFloodDTO> createResponseFloodDTOList(Map<String, List<PersonResponseFloodDTO>> personsByAddress) {
+        return personsByAddress.entrySet().stream()
+                .map(entry -> new ResponseFloodDTO(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+	private Map<String, List<PersonResponseFloodDTO>> mapPersonsToAddressAndPersonResponseFloodDTO(List<Person> persons) {
+        return persons.stream()
+                .collect(Collectors.groupingBy(
+                        Person::getAddress,
+                        Collectors.mapping(this::mapPersonToPersonResponseFloodDTO, Collectors.toList())
+                ));
+
+    }
+
+	private PersonResponseFloodDTO mapPersonToPersonResponseFloodDTO(Person person) {
+		PersonResponseFloodDTO personsInformation = new PersonResponseFloodDTO(
+						person.getFirstName(),
+						person.getLastName(),
+						person.getPhone(),
+						getAge(medicalRecordRepository.findByFirstnameAndLastname(
+								person.getFirstName(),
+								person.getLastName())),
+						new MedicalRecordBaseDTO(
+								medicalRecordRepository.findByFirstnameAndLastname(
+										person.getFirstName(),
+										person.getLastName()).getMedications(),
+								medicalRecordRepository.findByFirstnameAndLastname(
+										person.getFirstName(),
+										person.getLastName()).getAllergies()));
+		return personsInformation;
 	}
 
 	public ResponsePersonInfoDTO getPersonInfoByName(String firstName, String lastName) {
@@ -223,6 +232,18 @@ public class PersonService {
 		String birthDate = medicalRecord.getBirthdate();
 		LocalDate birthdate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		LocalDate now = LocalDate.now();
-		return now.getYear() - birthdate.getYear();
+		return Period.between(birthdate, now).getYears();
 	}
+
+	private List<Person> getPersonsListByStationNumber(String stationNumber) {
+		List<Firestation> firestationsBySationNumber = firestationRepository.findByStationNumber(stationNumber);
+		List<Person> personsByStationNumber = new ArrayList<>();
+
+		for (Firestation firestation : firestationsBySationNumber) {
+			List<Person> persons = (personRepository.findByAddress(firestation.getAddress()));
+			personsByStationNumber.addAll(persons);
+		}
+		return personsByStationNumber;
+	}
+
 }
