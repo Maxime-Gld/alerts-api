@@ -17,7 +17,7 @@ public interface FirestationRepository {
 
     Firestation update(Firestation updatefirestation);
 
-    void delete(Firestation firestation);
+    boolean delete(Firestation firestation);
 
     Firestation findByAddress(String address);
 

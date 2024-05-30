@@ -13,11 +13,11 @@ public interface PersonRepository {
 
     Person findByFirstnameAndLastname(String firstname, String lastname);
 
-    void save(Person person);
+    Person save(Person person);
 
-    void update(Person updatePerson);
+    Person update(Person updatePerson);
 
-    void delete(Person person);
+    boolean delete(Person person);
 
     List<Person> findByAddress(String address);
 

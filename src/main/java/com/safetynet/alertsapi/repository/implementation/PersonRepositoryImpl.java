@@ -41,28 +41,38 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public void save(Person newPerson) {
+    public Person save(Person newPerson) {
+        if (newPerson.getFirstName() == null || newPerson.getLastName() == null) {
+            return null;
+        }
         persons.add(newPerson);
+        return newPerson;
         // que faire en cas d'erreur ?
     }
 
     @Override
-    public void update(Person updatePerson) {
+    public Person update(Person updatePerson) {
         Person person = findByFirstnameAndLastname(updatePerson.getFirstName(), updatePerson.getLastName());
         if (person != null) {
             persons.remove(person);
             persons.add(updatePerson);
+            return updatePerson;
         }
+
         // que faire en cas d'erreur ?
+        return null;
     }
 
     @Override
-    public void delete(Person deletePerson) {
+    public boolean delete(Person deletePerson) {
         Person person = findByFirstnameAndLastname(deletePerson.getFirstName(), deletePerson.getLastName());
         if (person != null) {
             persons.remove(person);
+            return true;
+        } else {
+            // que faire en cas d'erreur ?
+            return false;
         }
-        // que faire en cas d'erreur ?
     }
 
     @Override

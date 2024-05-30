@@ -23,19 +23,30 @@ public class FirestationRestController {
     @PostMapping
     public ResponseEntity<Firestation> addFirestation(@RequestBody Firestation firestation) {
         Firestation newFirestation = firestationRepository.save(firestation);
-        return new ResponseEntity<>(newFirestation,HttpStatus.CREATED);
+        if (newFirestation != null) {
+            return new ResponseEntity<>(newFirestation, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     // mettre à jour le numéro de la caserne de pompiers d'une adresses
     @PutMapping
-    public void updateFirestation(@RequestBody Firestation updatefirestation) {
-        firestationRepository.update(updatefirestation);
+    public ResponseEntity<Firestation> updateFirestation(@RequestBody Firestation updatefirestation) {
+        Firestation firestationUpdated = firestationRepository.update(updatefirestation);
+        if (firestationUpdated != null) {
+            return new ResponseEntity<>(firestationUpdated, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     // supprimer le mapping d'une caserne ou d'une adresse.
     @DeleteMapping
-    public void deleteFirestation(@RequestBody Firestation deletefirestation) {
-        firestationRepository.delete(deletefirestation);
+    public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation deletefirestation) {
+        boolean firestationDelested = firestationRepository.delete(deletefirestation);
+        if (firestationDelested == true) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -13,10 +13,10 @@ public interface MedicalRecordRepository {
 
     MedicalRecord findByFirstnameAndLastname(String firstname, String lastname);
 
-    void save(MedicalRecord medicalRecord);
+    MedicalRecord save(MedicalRecord medicalRecord);
 
-    void update(MedicalRecord updateMedicalrecord);
+    MedicalRecord update(MedicalRecord updateMedicalrecord);
 
-    void delete(MedicalRecord medicalRecord);
+    boolean delete(MedicalRecord medicalRecord);
 
 }

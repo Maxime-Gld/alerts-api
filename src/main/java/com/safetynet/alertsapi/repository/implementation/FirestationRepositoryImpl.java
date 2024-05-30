@@ -32,19 +32,24 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public Firestation save(Firestation firestation) {
+        if (firestation.getStation() == null || firestation.getAddress() == null) {
+            return null;
+        }
         firestations.add(firestation);
         return firestation;
     }
 
     @Override
     public Firestation update(Firestation updateFirestation) {
-        Firestation firestation = findByFirestation(updateFirestation);
-        if (firestation != null) {
+        Firestation firestation = findByAddress(updateFirestation.getAddress());
+        if (firestation != null && updateFirestation.getStation() != null && updateFirestation.getAddress() != null) {
             firestations.remove(firestation);
             firestations.add(updateFirestation);
+            return updateFirestation;
         }
 
-        return updateFirestation;
+        return null;
+
         // que faire en cas d'erreur ?
     }
 
@@ -57,12 +62,16 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     @Override
-    public void delete(Firestation deleteFirestation) {
-        List<Firestation> firestationByStationNumber = findByStationNumber(deleteFirestation.getStation());
-        if (!firestationByStationNumber.isEmpty()) {
-            firestationByStationNumber.remove(deleteFirestation);
+    public boolean delete(Firestation deleteFirestation) {
+        List<Firestation> firestations = findAll();
+        Firestation firestationByAdddress = findByAddress(deleteFirestation.getAddress());
+
+        if (firestationByAdddress != null || firestations.contains(deleteFirestation)) {
+            firestations.remove(firestationByAdddress);
+            return true;
+        } else {
+            return false;
         }
-        // que faire en cas d'erreur ?
     }
 
     @Override

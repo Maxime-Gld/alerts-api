@@ -42,29 +42,40 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     }
 
     @Override
-    public void save(MedicalRecord newMedicalRecord) {
+    public MedicalRecord save(MedicalRecord newMedicalRecord) {
+        if (newMedicalRecord.getFirstName() == null || newMedicalRecord.getLastName() == null
+                || newMedicalRecord.getBirthdate() == null) {
+            return null;
+        }
         medicalRecords.add(newMedicalRecord);
+        return newMedicalRecord;
         // que faire en cas d'erreur ?
     }
 
     @Override
-    public void update(MedicalRecord updateMedicalrecord) {
+    public MedicalRecord update(MedicalRecord updateMedicalrecord) {
         MedicalRecord medicalrecord = findByFirstnameAndLastname(updateMedicalrecord.getFirstName(),
                 updateMedicalrecord.getLastName());
         if (medicalrecord != null) {
             medicalRecords.remove(medicalrecord);
             medicalRecords.add(updateMedicalrecord);
+            return updateMedicalrecord;
         }
+
         // que faire en cas d'erreur ?
+        return null;
     }
 
     @Override
-    public void delete(MedicalRecord deleteMedicalRecord) {
+    public boolean delete(MedicalRecord deleteMedicalRecord) {
         MedicalRecord medicalRecord = findByFirstnameAndLastname(deleteMedicalRecord.getFirstName(),
                 deleteMedicalRecord.getLastName());
         if (medicalRecord != null) {
             medicalRecords.remove(medicalRecord);
+            return true;
+        } else {
+            // que faire en cas d'erreur ?
+            return false;
         }
-        // que faire en cas d'erreur ?
     }
 }
