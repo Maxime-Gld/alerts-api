@@ -15,6 +15,9 @@ import com.safetynet.alertsapi.model.Firestation;
 import com.safetynet.alertsapi.repository.FirestationRepository;
 import com.safetynet.alertsapi.repository.implementation.FirestationRepositoryImpl;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/firestation")
 public class FirestationRestController {
@@ -23,7 +26,11 @@ public class FirestationRestController {
 
     FirestationRepository firestationRepository = new FirestationRepositoryImpl();
 
-    // ajout d'un mapping caserne/adresse
+
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Created"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PostMapping
     public ResponseEntity<Firestation> addFirestation(@RequestBody Firestation firestation) {
         Firestation newFirestation = firestationRepository.save(firestation);
@@ -35,7 +42,10 @@ public class FirestationRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // mettre à jour le numéro de la caserne de pompiers d'une adresses
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PutMapping
     public ResponseEntity<Firestation> updateFirestation(@RequestBody Firestation updatefirestation) {
         Firestation firestationUpdated = firestationRepository.update(updatefirestation);
@@ -47,7 +57,10 @@ public class FirestationRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // supprimer le mapping d'une caserne ou d'une adresse.
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "No Content"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @DeleteMapping
     public ResponseEntity<Firestation> deleteFirestation(@RequestBody Firestation deletefirestation) {
         boolean firestationDelested = firestationRepository.delete(deletefirestation);

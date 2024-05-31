@@ -15,6 +15,9 @@ import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.repository.PersonRepository;
 import com.safetynet.alertsapi.repository.implementation.PersonRepositoryImpl;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/person")
 public class PersonRestController {
@@ -23,7 +26,10 @@ public class PersonRestController {
 
     PersonRepository personRepository = new PersonRepositoryImpl();
 
-    // ajouter une nouvelle personne
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Created"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PostMapping
     public ResponseEntity<Person> addPerson(@RequestBody Person newPerson) {
         Person person = personRepository.save(newPerson);
@@ -35,7 +41,10 @@ public class PersonRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // modifier une personne par son nom et prénom
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PutMapping
     public ResponseEntity<Person> updatePerson(@RequestBody Person updatePerson) {
         Person personUpdated = personRepository.update(updatePerson);
@@ -47,7 +56,10 @@ public class PersonRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // supprimer une personne par son nom et prénom
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "No Content"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @DeleteMapping
     public ResponseEntity<Person> deletePerson(@RequestBody Person deletePerson) {
         boolean personDeleted = personRepository.delete(deletePerson);

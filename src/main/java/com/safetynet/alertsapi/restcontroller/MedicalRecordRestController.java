@@ -15,6 +15,9 @@ import com.safetynet.alertsapi.model.MedicalRecord;
 import com.safetynet.alertsapi.repository.MedicalRecordRepository;
 import com.safetynet.alertsapi.repository.implementation.MedicalRecordRepositoryImpl;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/medicalrecord")
 public class MedicalRecordRestController {
@@ -23,7 +26,10 @@ public class MedicalRecordRestController {
 
     MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl();
 
-    // ajouter un dossier médical pour une personne
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Created"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PostMapping
     public ResponseEntity<MedicalRecord> addMedicalrecord(@RequestBody MedicalRecord newMedicalrecord) {
         MedicalRecord medicalRecord = medicalRecordRepository.save(newMedicalrecord);
@@ -35,7 +41,10 @@ public class MedicalRecordRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // mettre à jour un dossier médical existant par le nom et prénom de la personne
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @PutMapping
     public ResponseEntity<MedicalRecord> updateMedicalrecord(@RequestBody MedicalRecord updateMedicalrecord) {
         MedicalRecord medicalRecordUpdated = medicalRecordRepository.update(updateMedicalrecord);
@@ -47,7 +56,10 @@ public class MedicalRecordRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // supprimer un dossier médical par le nom et prénom de la personne
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     @DeleteMapping
     public ResponseEntity<MedicalRecord> deleteMedicalrecord(@RequestBody MedicalRecord deleteMedicalrecord) {
         boolean medicalrecordDeleted = medicalRecordRepository.delete(deleteMedicalrecord);
