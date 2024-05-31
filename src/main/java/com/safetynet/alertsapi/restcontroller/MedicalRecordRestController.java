@@ -1,5 +1,7 @@
 package com.safetynet.alertsapi.restcontroller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +19,8 @@ import com.safetynet.alertsapi.repository.implementation.MedicalRecordRepository
 @RequestMapping("/medicalrecord")
 public class MedicalRecordRestController {
 
+    private static final Logger logger = LogManager.getLogger(MedicalRecordRestController.class);
+
     MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepositoryImpl();
 
     // ajouter un dossier médical pour une personne
@@ -24,8 +28,10 @@ public class MedicalRecordRestController {
     public ResponseEntity<MedicalRecord> addMedicalrecord(@RequestBody MedicalRecord newMedicalrecord) {
         MedicalRecord medicalRecord = medicalRecordRepository.save(newMedicalrecord);
         if (medicalRecord != null) {
+            logger.info("Medicalrecord created : " + medicalRecord);
             return new ResponseEntity<>(medicalRecord, HttpStatus.CREATED);
         }
+        logger.error("Medicalrecord not created : BAD_REQUEST");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -34,8 +40,10 @@ public class MedicalRecordRestController {
     public ResponseEntity<MedicalRecord> updateMedicalrecord(@RequestBody MedicalRecord updateMedicalrecord) {
         MedicalRecord medicalRecordUpdated = medicalRecordRepository.update(updateMedicalrecord);
         if (medicalRecordUpdated != null) {
+            logger.info("Medicalrecord updated : " + medicalRecordUpdated);
             return new ResponseEntity<>(medicalRecordUpdated, HttpStatus.OK);
         }
+        logger.error("Medicalrecord not updated : BAD_REQUEST");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -44,8 +52,10 @@ public class MedicalRecordRestController {
     public ResponseEntity<MedicalRecord> deleteMedicalrecord(@RequestBody MedicalRecord deleteMedicalrecord) {
         boolean medicalrecordDeleted = medicalRecordRepository.delete(deleteMedicalrecord);
         if (medicalrecordDeleted == true) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            logger.info("Medicalrecord deleted : " + deleteMedicalrecord);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        logger.error("Medicalrecord not deleted : BAD_REQUEST");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
