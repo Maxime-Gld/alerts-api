@@ -21,19 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.InputStream;
 import java.util.List;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class FirestationRestControllerTest {
 
-    //@Autowired
-    //private FirestationRepositoryImpl firestationRepository;
-    
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper mapper = new ObjectMapper();
-    
+
     @BeforeEach
     void setUp() throws Exception {
         loadTestData();
@@ -44,32 +40,85 @@ public class FirestationRestControllerTest {
         DataJson dataJson = mapper.readValue(inputStream, DataJson.class);
         return dataJson.getFirestations();
     }
-    
+
     @Test
     void testAddFirestation() throws Exception {
         Firestation newFirestation = new Firestation("123 Main St", "1");
         String newFirestationJson = mapper.writeValueAsString(newFirestation);
-    
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(newFirestationJson))
-            .andExpect(status().isCreated())
-            .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newFirestationJson))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-            String content = result.getResponse().getContentAsString();
-            Firestation savedFirestation = mapper.readValue(content, Firestation.class);
+        String content = result.getResponse().getContentAsString();
+        Firestation savedFirestation = mapper.readValue(content, Firestation.class);
 
-            assertEquals("123 Main St", savedFirestation.getAddress());
-            assertEquals("1", savedFirestation.getStation());
+        assertEquals("123 Main St", savedFirestation.getAddress());
+        assertEquals("1", savedFirestation.getStation());
     }
 
     @Test
-    void testDeleteFirestation() {
+    void testDeleteFirestation() throws Exception {
+        Firestation firestation = new Firestation("1509 Culver St", "3");
+        String firestationJson = mapper.writeValueAsString(firestation);
 
+        mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(firestationJson))
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    void testUpdateFirestation() {
+    void testUpdateFirestation() throws Exception {
+        Firestation firestation = new Firestation("29 15th St", "9");
+        String firestationJson = mapper.writeValueAsString(firestation);
 
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(firestationJson))
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        String content = result.getResponse().getContentAsString();
+        Firestation savedFirestation = mapper.readValue(content, Firestation.class);
+
+        assertEquals("29 15th St", savedFirestation.getAddress());
+        assertEquals("9", savedFirestation.getStation());
+    }
+
+    @Test
+    void testAddFirestationBadRequest() throws Exception {
+        Firestation newFirestation = new Firestation(null, null);
+        String newFirestationJson = mapper.writeValueAsString(newFirestation);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newFirestationJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testDeleteFirestationBadRequest() throws Exception {
+        Firestation firestation = new Firestation(null, null);
+        String firestationJson = mapper.writeValueAsString(firestation);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(firestationJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateFirestationBadRequest() throws Exception {
+        Firestation firestation = new Firestation(null, null);
+        String firestationJson = mapper.writeValueAsString(firestation);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(firestationJson))
+                .andExpect(status().isBadRequest());
     }
 }

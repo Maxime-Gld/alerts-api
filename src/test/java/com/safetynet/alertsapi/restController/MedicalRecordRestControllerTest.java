@@ -1,48 +1,124 @@
 package com.safetynet.alertsapi.restController;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.InputStream;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.safetynet.alertsapi.restcontroller.MedicalRecordRestController;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.alertsapi.model.DataJson;
+import com.safetynet.alertsapi.model.MedicalRecord;
 
-@WebMvcTest(MedicalRecordRestController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class MedicalRecordRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() throws Exception {
+        loadTestData();
+    }
+
+    private List<MedicalRecord> loadTestData() throws Exception {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("dataTest.json");
+        DataJson dataJson = mapper.readValue(inputStream, DataJson.class);
+        return dataJson.getMedicalrecords();
+    }
+
     @Test
     public void testAddMedicalRecord() throws Exception {
-        String newMedicalRecordJson = "{\"firstName\": \"John\", \"lastName\": \"Doe\"}";
+        MedicalRecord newMedicalRecord = new MedicalRecord("John", "Doe", "01/01/2000", List.of("med1"), List.of("all1"));  
+        String newMedicalRecordJson = mapper.writeValueAsString(newMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(newMedicalRecordJson))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newMedicalRecordJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        MedicalRecord savedMedicalRecord = mapper.readValue(content, MedicalRecord.class);
+        assertEquals("John", savedMedicalRecord.getFirstName());
+        assertEquals("Doe", savedMedicalRecord.getLastName());
     }
-    
+
     @Test
     public void testUpdateMedicalRecord() throws Exception {
-        String updateMedicalRecordJson = "{\"firstName\": \"John\", \"lastName\": \"Doe\"}";
+        MedicalRecord updateMedicalRecord = new MedicalRecord("Jacob", "Boyd", "01/01/2000", List.of("med1"), List.of("all1"));
+        String updateMedicalRecordJson = mapper.writeValueAsString(updateMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(updateMedicalRecordJson))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateMedicalRecordJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        MedicalRecord savedMedicalRecord = mapper.readValue(content, MedicalRecord.class);
+        
+        assertEquals("Jacob", savedMedicalRecord.getFirstName());
+        assertEquals("Boyd", savedMedicalRecord.getLastName());
+        assertEquals("01/01/2000", savedMedicalRecord.getBirthdate());
     }
 
     @Test
     public void testDeleteMedicalRecord() throws Exception {
-        String deleteMedicalRecordJson = "{\"firstName\": \"John\", \"lastName\": \"Doe\"}";
+        MedicalRecord deleteMedicalRecord = new MedicalRecord("John", "Boyd", "01/01/2000", List.of("med1"), List.of("all1"));
+        String deleteMedicalRecordJson = mapper.writeValueAsString(deleteMedicalRecord);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecord")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(deleteMedicalRecordJson))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(deleteMedicalRecordJson))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void testAddMedicalRecordBadRequest() throws Exception {
+        MedicalRecord newMedicalRecord = new MedicalRecord(null, null, null, null, null);
+        String newMedicalRecordJson = mapper.writeValueAsString(newMedicalRecord);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newMedicalRecordJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateMedicalRecordBadRequest() throws Exception {
+        MedicalRecord updateMedicalRecord = new MedicalRecord(null, null, null, null, null);
+        String updateMedicalRecordJson = mapper.writeValueAsString(updateMedicalRecord);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateMedicalRecordJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testDeleteMedicalRecordBadRequest() throws Exception {
+        MedicalRecord deleteMedicalRecord = new MedicalRecord(null, null, null, null, null);
+        String deleteMedicalRecordJson = mapper.writeValueAsString(deleteMedicalRecord);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(deleteMedicalRecordJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
