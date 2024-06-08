@@ -30,7 +30,7 @@ public class ChildAlertService {
         logger.debug("Recherche des enfants par adresse : " + address);
 		List<Person> personsByAddress = personService.getPersonsListByAddress(address);
 
-        if (personsByAddress.isEmpty()) {
+        if (personsByAddress == null) {
             logger.debug("aucune personne dans l'adresse : " + address + " ou adresse erronée");
             return null;
         }
