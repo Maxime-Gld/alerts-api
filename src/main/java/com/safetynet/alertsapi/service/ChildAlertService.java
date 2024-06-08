@@ -18,20 +18,23 @@ public class ChildAlertService {
     private static final Logger logger = LogManager.getLogger(ChildAlertService.class);
     
     private PersonService personService;
+    private DtoMapper dtoMapper;
 
-    public ChildAlertService(PersonService personService) {
+    public ChildAlertService(PersonService personService, DtoMapper dtoMapper) {
         this.personService = personService;
+        this.dtoMapper = dtoMapper;
     }
     
     public ResponseChildAlertDTO getChildsByAddress(String address) {
-		// on récupère la liste des personnes par adresse
+
+        logger.debug("Recherche des enfants par adresse : " + address);
 		List<Person> personsByAddress = personService.getPersonsListByAddress(address);
 
         if (personsByAddress.isEmpty()) {
+            logger.debug("aucune personne dans l'adresse : " + address + " ou adresse erronée");
             return null;
         }
 
-		// on filtre pour séparer les enfants et les adultes
 		List<Person> children = personService.getChildrenByAdress(personsByAddress);
         List<Person> adults = personService.getAdultsByAdress(personsByAddress);
 
@@ -40,9 +43,9 @@ public class ChildAlertService {
 			return new ResponseChildAlertDTO(new ArrayList<>(), new ArrayList<>());
 		}
         
-        // on transforme en DTO
-		List<PersonResponseChildAlertDTO> childInformations = DtoMapper.toPersonResponseChildAlertDTOList(personsByAddress);
-		List<PersonResponseChildAlertDTO> adultInformations = DtoMapper.toPersonResponseChildAlertDTOList(adults);
+        logger.debug("Enfants trouvés : " + children.size());
+		List<PersonResponseChildAlertDTO> childInformations = dtoMapper.toPersonResponseChildAlertDTOList(personsByAddress);
+		List<PersonResponseChildAlertDTO> adultInformations = dtoMapper.toPersonResponseChildAlertDTOList(adults);
 
 		return new ResponseChildAlertDTO(childInformations, adultInformations);
 	}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.alertsapi.dto.ResponseFloodDTO;
@@ -14,27 +16,40 @@ import com.safetynet.alertsapi.utils.DtoMapper;
 @Service
 public class FloodService {
 
-    private PersonService personService;
+	public static final Logger logger = LogManager.getLogger(FloodService.class);
 
-    public FloodService(PersonService personService) {
-        this.personService = personService;
-    }
+	private PersonService personService;
+	private DtoMapper dtoMapper;
 
-    	public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stationNumbers) {
+	public FloodService(PersonService personService, DtoMapper dtoMapper) {
+		this.personService = personService;
+		this.dtoMapper = dtoMapper;
+	}
+
+	public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stationNumbers) {
+
+		logger.debug("Recherche des informations sur les menages couverts par les stations : " + stationNumbers);
 		List<ResponseFloodDTO> householdInformationsList = new ArrayList<>();
 
 		for (Integer stationNumber : stationNumbers) {
 			List<Person> personsByStationNumber = personService.getPersonsListByStationNumber(stationNumber.toString());
-			Map<String, List<PersonResponseFloodDTO>> personsByAddress = DtoMapper.toMapPersonResponseFloodDTOList(personsByStationNumber);
-			List<ResponseFloodDTO> householdInformations = DtoMapper.toResponseFloodDTOList(personsByAddress);
-            householdInformationsList.addAll(householdInformations);
+
+			if (personsByStationNumber.isEmpty()) {
+				logger.debug("numéro de staion : " + stationNumber + " introuvable");
+			}
+
+			Map<String, List<PersonResponseFloodDTO>> personsByAddress = dtoMapper
+					.toMapPersonResponseFloodDTOList(personsByStationNumber);
+			List<ResponseFloodDTO> householdInformations = dtoMapper.toResponseFloodDTOList(personsByAddress);
+			householdInformationsList.addAll(householdInformations);
 		}
-		
-        if (householdInformationsList.isEmpty()) {
-            return null;
-        }
+
+		if (householdInformationsList.isEmpty()) {
+			logger.debug("aucune informations trouvé pour les stations : " + stationNumbers);
+			return null;
+		}
 
 		return householdInformationsList;
 	}
-    
+
 }
