@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.alertsapi.config.constant.EndPointConstant;
 import com.safetynet.alertsapi.dto.ResponseChildAlertDTO;
 import com.safetynet.alertsapi.dto.ResponseEmailDTO;
 import com.safetynet.alertsapi.dto.ResponseFireDTO;
@@ -45,7 +46,7 @@ public class UrlRestController {
     @Autowired
     private PersonInfoService personInfoService;
 
-    @GetMapping("/firestation")
+    @GetMapping(EndPointConstant.FIRESTATION)
     public ResponseEntity<ResponseFirestationDTO> getPeopleByStationNumber(@RequestParam("stationNumber") String stationNumber) {
         ResponseFirestationDTO people = firestationService.getPersonsByStationNumber(stationNumber);
 
@@ -58,7 +59,7 @@ public class UrlRestController {
         return ResponseEntity.ok(people);
     }
 
-    @GetMapping("/childAlert")
+    @GetMapping(EndPointConstant.CHILD)
     public ResponseEntity<ResponseChildAlertDTO> getChildsByAddress(@RequestParam("address") String address) {
         ResponseChildAlertDTO childList = childAlertService.getChildsByAddress(address);
 
@@ -71,7 +72,7 @@ public class UrlRestController {
         return ResponseEntity.ok(childList);
     }
 
-    @GetMapping("/phoneAlert")
+    @GetMapping(EndPointConstant.PHONE)
     public ResponseEntity<ResponsePhoneAlertDTO> getPhonesByStationNumber(@RequestParam("firestation") String stationNumber) {
         ResponsePhoneAlertDTO phones = phoneAlertService.getPhonesByStationNumber(stationNumber);
 
@@ -84,7 +85,7 @@ public class UrlRestController {
         return ResponseEntity.ok(phones);
     }
 
-    @GetMapping("/fire")
+    @GetMapping(EndPointConstant.FIRE)
     public ResponseEntity<ResponseFireDTO> getPersonsByAdress(@RequestParam("address") String address) {
         ResponseFireDTO people = fireService.getPersonsByAdress(address);
 
@@ -97,7 +98,7 @@ public class UrlRestController {
         return ResponseEntity.ok(people);
     }
 
-    @GetMapping("/flood/stations")
+    @GetMapping(EndPointConstant.FLOOD)
     public ResponseEntity<List<ResponseFloodDTO>> getHouseholdInformationsByStations(@RequestParam("stations") List<Integer> stations) {
         List<ResponseFloodDTO> householdInformations = floodService.getHouseholdInformationsByStations(stations);
 
@@ -110,7 +111,7 @@ public class UrlRestController {
         return ResponseEntity.ok(householdInformations);
     }
 
-    @GetMapping("/personInfoLastName")
+    @GetMapping(EndPointConstant.PERSON_INFO)
     public ResponseEntity<ResponsePersonInfoDTO> getInformationsByName(
             @RequestParam("lastName") String lastName) {
         ResponsePersonInfoDTO person = personInfoService.getPersonInfoByName(lastName);
@@ -124,7 +125,7 @@ public class UrlRestController {
         return ResponseEntity.ok(person);
     }
 
-    @GetMapping("/communityEmail")
+    @GetMapping(EndPointConstant.EMAIL)
     public ResponseEntity<ResponseEmailDTO> getPersonsByCity(@RequestParam("city") String city) {
         ResponseEmailDTO emails = communityEmailService.getAllEmailsByCity(city);
 
