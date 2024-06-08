@@ -63,7 +63,7 @@ public class UrlRestController {
         ResponseChildAlertDTO childList = childAlertService.getChildsByAddress(address);
 
         if (childList == null) {
-            logger.error("adress not found");
+            logger.error("address not found");
             return ResponseEntity.notFound().build();
         }
 
@@ -89,7 +89,7 @@ public class UrlRestController {
         ResponseFireDTO people = fireService.getPersonsByAdress(address);
 
         if (people == null) {
-            logger.error("adress not found");
+            logger.error("address not found");
             return ResponseEntity.notFound().build();
         }
 
@@ -110,7 +110,7 @@ public class UrlRestController {
         return ResponseEntity.ok(householdInformations);
     }
 
-    @GetMapping("/personInfo")
+    @GetMapping("/personInfoLastName")
     public ResponseEntity<ResponsePersonInfoDTO> getInformationsByName(
             @RequestParam("lastName") String lastName) {
         ResponsePersonInfoDTO person = personInfoService.getPersonInfoByName(lastName);
