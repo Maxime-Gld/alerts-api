@@ -30,17 +30,16 @@ public class PersonService {
 	}
 
 	public boolean isAChild(Person person) {
-		String firstName = person.getFirstName();
-		String lastName = person.getLastName();
-		MedicalRecord medicalRecord = medicalRecordRepository.findByFirstnameAndLastname(firstName, lastName);
+		MedicalRecord medicalRecord = getMedicalRecord(person);
 		if (medicalRecord != null) {
-			int age = getAge(medicalRecord);
+			int age = getAge(person);
 			return age < 18;
 		}
 		return false;
 	}
 
-	public int getAge(MedicalRecord medicalRecord) {
+	public int getAge(Person person) {
+		MedicalRecord medicalRecord = getMedicalRecord(person);
 		String birthDate = medicalRecord.getBirthdate();
 		LocalDate birthdate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 		LocalDate now = LocalDate.now();
@@ -80,5 +79,9 @@ public class PersonService {
 
 	public List<Person> getPersonsByCity(String city) {
 		return personRepository.findByCity(city);
+	}
+
+	public MedicalRecord getMedicalRecord(Person person) {
+		return medicalRecordRepository.findByFirstnameAndLastname(person.getFirstName(), person.getLastName());
 	}
 }
