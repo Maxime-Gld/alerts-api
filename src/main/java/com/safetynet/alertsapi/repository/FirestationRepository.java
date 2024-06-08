@@ -21,6 +21,4 @@ public interface FirestationRepository {
 
     Firestation findByAddress(String address);
 
-    Firestation findByFirestation(Firestation firestation);
-
 }

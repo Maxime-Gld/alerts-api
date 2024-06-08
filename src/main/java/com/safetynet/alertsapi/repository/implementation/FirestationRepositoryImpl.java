@@ -49,16 +49,6 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         }
 
         return null;
-
-        // que faire en cas d'erreur ?
-    }
-
-    @Override
-    public Firestation findByFirestation(Firestation firestation) {
-        if (firestations.contains(firestation)) {
-            return firestation;
-        }
-        return null;
     }
 
     @Override
