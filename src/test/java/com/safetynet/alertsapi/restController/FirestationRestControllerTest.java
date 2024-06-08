@@ -11,34 +11,26 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsapi.model.DataJson;
 import com.safetynet.alertsapi.model.Firestation;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.InputStream;
-import java.util.List;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class FirestationRestControllerTest {
 
+    private static final String FIRESTATION_URL = "/firestation";
+
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
     @BeforeEach
-    void setUp() throws Exception {
-        loadTestData();
-    }
-
-    private List<Firestation> loadTestData() throws Exception {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("dataTest.json");
-        DataJson dataJson = mapper.readValue(inputStream, DataJson.class);
-        return dataJson.getFirestations();
+    public void setUp() {
+        this.mapper = new ObjectMapper();
     }
 
     @Test
@@ -46,7 +38,7 @@ public class FirestationRestControllerTest {
         Firestation newFirestation = new Firestation("123 Main St", "1");
         String newFirestationJson = mapper.writeValueAsString(newFirestation);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newFirestationJson))
                 .andExpect(status().isCreated())
@@ -64,7 +56,7 @@ public class FirestationRestControllerTest {
         Firestation firestation = new Firestation("1509 Culver St", "3");
         String firestationJson = mapper.writeValueAsString(firestation);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+        mockMvc.perform(MockMvcRequestBuilders.delete(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(firestationJson))
                 .andExpect(status().isNoContent());
@@ -75,7 +67,7 @@ public class FirestationRestControllerTest {
         Firestation firestation = new Firestation("29 15th St", "9");
         String firestationJson = mapper.writeValueAsString(firestation);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(firestationJson))
                 .andExpect(status().isOk())
@@ -94,7 +86,7 @@ public class FirestationRestControllerTest {
         Firestation newFirestation = new Firestation(null, null);
         String newFirestationJson = mapper.writeValueAsString(newFirestation);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
+        mockMvc.perform(MockMvcRequestBuilders.post(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newFirestationJson))
                 .andExpect(status().isBadRequest());
@@ -105,7 +97,7 @@ public class FirestationRestControllerTest {
         Firestation firestation = new Firestation(null, null);
         String firestationJson = mapper.writeValueAsString(firestation);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+        mockMvc.perform(MockMvcRequestBuilders.delete(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(firestationJson))
                 .andExpect(status().isBadRequest());
@@ -116,7 +108,7 @@ public class FirestationRestControllerTest {
         Firestation firestation = new Firestation(null, null);
         String firestationJson = mapper.writeValueAsString(firestation);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+        mockMvc.perform(MockMvcRequestBuilders.put(FIRESTATION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(firestationJson))
                 .andExpect(status().isBadRequest());

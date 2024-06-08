@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,27 +18,22 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsapi.model.DataJson;
 import com.safetynet.alertsapi.model.MedicalRecord;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class MedicalRecordRestControllerTest {
 
+    private static final String MEDICAL_RECORD_URL = "/medicalrecord";
+
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
     @BeforeEach
-    void setUp() throws Exception {
-        loadTestData();
-    }
-
-    private List<MedicalRecord> loadTestData() throws Exception {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("dataTest.json");
-        DataJson dataJson = mapper.readValue(inputStream, DataJson.class);
-        return dataJson.getMedicalrecords();
+    public void setUp() {
+        this.mapper = new ObjectMapper();
     }
 
     @Test
@@ -47,7 +41,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord newMedicalRecord = new MedicalRecord("John", "Doe", "01/01/2000", List.of("med1"), List.of("all1"));  
         String newMedicalRecordJson = mapper.writeValueAsString(newMedicalRecord);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newMedicalRecordJson))
                 .andExpect(status().isCreated())
@@ -64,7 +58,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord updateMedicalRecord = new MedicalRecord("Jacob", "Boyd", "01/01/2000", List.of("med1"), List.of("all1"));
         String updateMedicalRecordJson = mapper.writeValueAsString(updateMedicalRecord);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updateMedicalRecordJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -83,7 +77,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord deleteMedicalRecord = new MedicalRecord("John", "Boyd", "01/01/2000", List.of("med1"), List.of("all1"));
         String deleteMedicalRecordJson = mapper.writeValueAsString(deleteMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecord")
+        mockMvc.perform(MockMvcRequestBuilders.delete(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(deleteMedicalRecordJson))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -94,7 +88,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord newMedicalRecord = new MedicalRecord(null, null, null, null, null);
         String newMedicalRecordJson = mapper.writeValueAsString(newMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecord")
+        mockMvc.perform(MockMvcRequestBuilders.post(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(newMedicalRecordJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -105,7 +99,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord updateMedicalRecord = new MedicalRecord(null, null, null, null, null);
         String updateMedicalRecordJson = mapper.writeValueAsString(updateMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecord")
+        mockMvc.perform(MockMvcRequestBuilders.put(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updateMedicalRecordJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -116,7 +110,7 @@ public class MedicalRecordRestControllerTest {
         MedicalRecord deleteMedicalRecord = new MedicalRecord(null, null, null, null, null);
         String deleteMedicalRecordJson = mapper.writeValueAsString(deleteMedicalRecord);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecord")
+        mockMvc.perform(MockMvcRequestBuilders.delete(MEDICAL_RECORD_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(deleteMedicalRecordJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());

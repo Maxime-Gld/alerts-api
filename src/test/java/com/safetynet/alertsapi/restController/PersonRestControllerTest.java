@@ -2,9 +2,6 @@ package com.safetynet.alertsapi.restController;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.InputStream;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,35 +14,30 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsapi.model.DataJson;
 import com.safetynet.alertsapi.model.Person;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PersonRestControllerTest {
 
+    private static final String PERSON_URL = "/person";
+
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
     @BeforeEach
-    void setUp() throws Exception {
-        loadTestData();
+    public void setUp() {
+        this.mapper = new ObjectMapper();
     }
-
-    private List<Person> loadTestData() throws Exception {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("dataTest.json");
-        DataJson dataJson = mapper.readValue(inputStream, DataJson.class);
-        return dataJson.getPersons();
-    }   
     
     @Test
     public void testAddPerson() throws Exception {
         Person newPerson = new Person("John", "Doe", "123 address", "city", "zip", "phone", "email");
         String newPersonJson = mapper.writeValueAsString(newPerson);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/person")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(newPersonJson))
             .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -64,7 +56,7 @@ public class PersonRestControllerTest {
         Person updatePerson = new Person("John", "Boyd", "123 address", "city", "zip", "phone", "email");
         String updatePersonJson = mapper.writeValueAsString(updatePerson);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/person")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(updatePersonJson))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -83,7 +75,7 @@ public class PersonRestControllerTest {
         Person person = new Person("John", "Boyd", "123 address", "city", "zip", "phone", "email");
         String deletePersonJson = mapper.writeValueAsString(person);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+        mockMvc.perform(MockMvcRequestBuilders.delete(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(deletePersonJson))
             .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -94,7 +86,7 @@ public class PersonRestControllerTest {
         Person person = new Person(null, null, "test", "test", "test", "test", "test");
         String personJson = mapper.writeValueAsString(person);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/person")
+        mockMvc.perform(MockMvcRequestBuilders.post(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(personJson))
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -105,7 +97,7 @@ public class PersonRestControllerTest {
         Person person = new Person("test", "test", "test", "test", "test", "test", "test");
         String personJson = mapper.writeValueAsString(person);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/person")
+        mockMvc.perform(MockMvcRequestBuilders.put(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(personJson))
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -116,7 +108,7 @@ public class PersonRestControllerTest {
         Person person = new Person("test", "test", "test", "test", "test", "test", "test");
         String personJson = mapper.writeValueAsString(person);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+        mockMvc.perform(MockMvcRequestBuilders.delete(PERSON_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(personJson))
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
