@@ -98,12 +98,6 @@ public class DtoMapper {
                                 toMedicalRecordBaseDTO(person));
         }
 
-        public List<PersonResponseFloodDTO> toPersonResponseFloodDTOList(List<Person> persons) {
-                return persons.stream()
-                                .map(this::toPersonResponseFloodDTO)
-                                .toList();
-        }
-
         public Map<String, List<PersonResponseFloodDTO>> toMapPersonResponseFloodDTOList(List<Person> persons) {
                 return persons.stream()
                                 .collect(Collectors.groupingBy(
