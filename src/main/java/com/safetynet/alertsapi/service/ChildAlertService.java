@@ -16,7 +16,7 @@ import com.safetynet.alertsapi.utils.DtoMapper;
 public class ChildAlertService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChildAlertService.class);
-    
+
     private PersonService personService;
     private DtoMapper dtoMapper;
 
@@ -24,29 +24,39 @@ public class ChildAlertService {
         this.personService = personService;
         this.dtoMapper = dtoMapper;
     }
-    
+
+    /**
+     * Récupère les informations des enfants et des adultes à partir de l'adresse
+     * donnée pur l'URL GET /childAlert
+     *
+     * @param address l'adresse pour effectuer la recherche
+     * @return une instance de ResponseChildAlertDTO contenant la liste des enfants et la liste des adultes
+     * @return une instance de ResponseChildAlertDTO vide si aucun enfant n'est trouvé 
+     * 
+     */
     public ResponseChildAlertDTO getChildsByAddress(String address) {
 
         logger.debug("Recherche des enfants par adresse : " + address);
-		List<Person> personsByAddress = personService.getPersonsListByAddress(address);
+        List<Person> personsByAddress = personService.getPersonsListByAddress(address);
 
         if (personsByAddress == null) {
             logger.debug("aucune personne dans l'adresse : " + address + " ou adresse erronée");
             return null;
         }
 
-		List<Person> children = personService.getChildrenByAdress(personsByAddress);
+        List<Person> children = personService.getChildrenByAdress(personsByAddress);
         List<Person> adults = personService.getAdultsByAdress(personsByAddress);
 
-		if (children.isEmpty()) {
+        if (children.isEmpty()) {
             logger.info(address + " has no child");
-			return new ResponseChildAlertDTO(new ArrayList<>(), new ArrayList<>());
-		}
-        
-        logger.debug("Enfants trouvés : " + children.size());
-		List<PersonResponseChildAlertDTO> childInformations = dtoMapper.toPersonResponseChildAlertDTOList(personsByAddress);
-		List<PersonResponseChildAlertDTO> adultInformations = dtoMapper.toPersonResponseChildAlertDTOList(adults);
+            return new ResponseChildAlertDTO(new ArrayList<>(), new ArrayList<>());
+        }
 
-		return new ResponseChildAlertDTO(childInformations, adultInformations);
-	}
+        logger.debug("Enfants trouvés : " + children.size());
+        List<PersonResponseChildAlertDTO> childInformations = dtoMapper
+                .toPersonResponseChildAlertDTOList(personsByAddress);
+        List<PersonResponseChildAlertDTO> adultInformations = dtoMapper.toPersonResponseChildAlertDTOList(adults);
+
+        return new ResponseChildAlertDTO(childInformations, adultInformations);
+    }
 }

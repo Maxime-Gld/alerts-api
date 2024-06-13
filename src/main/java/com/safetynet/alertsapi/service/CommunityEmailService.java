@@ -23,6 +23,13 @@ public class CommunityEmailService {
         this.dtoMapper = dtoMapper;
     }
 
+    /**
+     * Récupère toutes les adresses email des personnes dans une ville donnée pour
+     * l'URL GET /communityEmail
+     *
+     * @param city la ville pour laquelle on veut les adresses email
+     * @return le DTO contenant les adresses email trouvées
+     */
     public ResponseEmailDTO getAllEmailsByCity(String city) {
 
         logger.debug("Recherche des adresses email dans la ville : " + city);

@@ -26,6 +26,11 @@ public class FloodService {
 		this.dtoMapper = dtoMapper;
 	}
 
+	/**
+	 * Récupère les informations sur les menages couverts par les stations
+	 * @param stationNumbers numéro des stations sous forme de liste
+	 * @return une instance de ResponseFloodDTO contenant les informations sur les personnes triés et regroupés par adresse
+	 */
 	public List<ResponseFloodDTO> getHouseholdInformationsByStations(List<Integer> stationNumbers) {
 
 		logger.debug("Recherche des informations sur les menages couverts par les stations : " + stationNumbers);
@@ -35,7 +40,7 @@ public class FloodService {
 			List<Person> personsByStationNumber = personService.getPersonsListByStationNumber(stationNumber.toString());
 
 			if (personsByStationNumber.isEmpty()) {
-				logger.debug("numéro de staion : " + stationNumber + " introuvable");
+				logger.debug("numéro de station : " + stationNumber + " introuvable");
 			}
 
 			Map<String, List<PersonResponseFloodDTO>> personsByAddress = dtoMapper

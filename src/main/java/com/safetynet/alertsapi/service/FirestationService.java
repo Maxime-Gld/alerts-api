@@ -16,15 +16,24 @@ public class FirestationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(FirestationService.class);
 
-    private PersonService personService;
+	private PersonService personService;
 	private DtoMapper dtoMapper;
 
-    public FirestationService(PersonService personService, DtoMapper dtoMapper) {
-        this.personService = personService;
+	public FirestationService(PersonService personService, DtoMapper dtoMapper) {
+		this.personService = personService;
 		this.dtoMapper = dtoMapper;
-    }
+	}
 
-    public ResponseFirestationDTO getPersonsByStationNumber(String stationNumber) {
+	/**
+	 * Récupère les informations des personnes à partir du numéro de la station
+	 * donnée pour
+	 * l'URL GET /firestation
+	 * 
+	 * @param stationNumber le numéro de la station
+	 * @return une instance de ResponseFirestationDTO contenant les informations des
+	 *         personnes et le décompte des enfants et des adultes
+	 */
+	public ResponseFirestationDTO getPersonsByStationNumber(String stationNumber) {
 		int child = 0;
 		int adult = 0;
 
@@ -32,7 +41,7 @@ public class FirestationService {
 		List<Person> personsByStationNumber = personService.getPersonsListByStationNumber(stationNumber);
 
 		if (personsByStationNumber.isEmpty()) {
-			logger.debug("numéro de staion : " + stationNumber + " introuvable");
+			logger.debug("numéro de station : " + stationNumber + " introuvable");
 			return null;
 		}
 
@@ -46,7 +55,8 @@ public class FirestationService {
 		}
 		logger.debug(child + " enfants et " + adult + " adultes trouvés");
 
-		List<PersonResponseFirestationDTO> personsInformations = dtoMapper.toPersonResponseFirestationDTOList(personsByStationNumber);
+		List<PersonResponseFirestationDTO> personsInformations = dtoMapper
+				.toPersonResponseFirestationDTOList(personsByStationNumber);
 
 		return new ResponseFirestationDTO(child, adult, personsInformations);
 	}

@@ -23,17 +23,24 @@ public class PhoneAlertService {
         this.dtoMapper = dtoMapper;
     }
 
+    /**
+     * Récupère les numéros de contact pour l'URL GET /phoneAlert
+     * 
+     * @param stationNumber numéro de la station
+     * @return une instance de ResponsePhoneAlertDTO contenant les numéros de
+     *         contact
+     */
     public ResponsePhoneAlertDTO getPhonesByStationNumber(String stationNumber) {
 
-        logger.debug("Recherche des numéros de téléphone par station numéro : " + stationNumber);
+        logger.debug("Recherche des numéros de téléphone par numéro de station : " + stationNumber);
         List<Person> personsByStationNumber = personService.getPersonsListByStationNumber(stationNumber);
 
         if (personsByStationNumber.isEmpty()) {
-            logger.debug("numéro de staion : " + stationNumber + " introuvable ou erroné");
+            logger.debug("numéro de station : " + stationNumber + " introuvable ou erroné");
             return null;
         }
 
-        logger.debug("numérios de numéro trouvés : " + personsByStationNumber.size());
+        logger.debug("numéro(s) de téléphone trouvés : " + personsByStationNumber.size());
         return dtoMapper.toResponsePhoneAlertDTO(personsByStationNumber);
     }
 }

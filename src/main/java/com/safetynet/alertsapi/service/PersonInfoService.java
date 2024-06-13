@@ -24,6 +24,11 @@ public class PersonInfoService {
         this.dtoMapper = dtoMapper;
     }
 
+    /**
+     * Récupère les informations sur les personnes pour l'URL GET /personInfo
+     * @param lastName nom de la personne
+     * @return une instance de ResponsePersonInfoDTO contenant les informations sur les personnes ayant le même nom
+     */
     public ResponsePersonInfoDTO getPersonInfoByName(String lastName) {
 
         logger.debug("Recherche de personnes pour le nom : " + lastName);

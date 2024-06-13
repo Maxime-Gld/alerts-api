@@ -20,6 +20,10 @@ import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.service.PersonService;
 
 @Component
+/**
+ * Classe permettant de mapper les objets de type Person vers les objets de type
+ * DTO
+ */
 public class DtoMapper {
 
         private PersonService personService;

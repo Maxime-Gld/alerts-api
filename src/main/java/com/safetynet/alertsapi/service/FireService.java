@@ -16,7 +16,7 @@ import com.safetynet.alertsapi.utils.DtoMapper;
 public class FireService {
 
     public static final Logger logger = LoggerFactory.getLogger(FireService.class);
-    
+
     private PersonService personService;
     private DtoMapper dtoMapper;
 
@@ -25,20 +25,28 @@ public class FireService {
         this.dtoMapper = dtoMapper;
     }
 
+    /**
+     * Récupère les informations des personnes à partir de l'adresse donnée pour
+     * l'URL GET /fire
+     * 
+     * @param address l'adresse pour effectuer la recherche
+     * @return une instance de ResponseFireDTO contenant les informations des
+     *         personnes et la Firestation qui les couvrent
+     */
     public ResponseFireDTO getPersonsByAdress(String address) {
 
         logger.debug("Recherche des personnes par adresse : " + address);
-		Firestation firestation = personService.getFirestationByAddress(address);
+        Firestation firestation = personService.getFirestationByAddress(address);
 
         if (firestation == null) {
             logger.debug("adresse : " + address + " introuvable ou erronée");
             return null;
         }
 
-		List<Person> personsByAddress = personService.getPersonsListByAddress(address);
-		List<PersonResponseFireDTO> personsInformations = dtoMapper.toPersonResponseFireDTOList(personsByAddress);
+        List<Person> personsByAddress = personService.getPersonsListByAddress(address);
+        List<PersonResponseFireDTO> personsInformations = dtoMapper.toPersonResponseFireDTOList(personsByAddress);
 
         logger.debug("Personnes trouvées : " + personsByAddress.size());
-		return new ResponseFireDTO(firestation, personsInformations);
-	}
+        return new ResponseFireDTO(firestation, personsInformations);
+    }
 }
