@@ -2,8 +2,8 @@ package com.safetynet.alertsapi.restcontroller;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ import com.safetynet.alertsapi.service.PhoneAlertService;
 @RestController
 public class UrlRestController {
 
-    private static final Logger logger = LogManager.getLogger(UrlRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UrlRestController.class);
 
     @Autowired
     private CommunityEmailService communityEmailService;
@@ -55,7 +55,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(people);
+        logger.info(people.toString());
         return ResponseEntity.ok(people);
     }
 
@@ -68,7 +68,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(childList);
+        logger.info(childList.toString());
         return ResponseEntity.ok(childList);
     }
 
@@ -81,7 +81,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(phones);
+        logger.info(phones.toString());
         return ResponseEntity.ok(phones);
     }
 
@@ -94,7 +94,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(people);
+        logger.info(people.toString());
         return ResponseEntity.ok(people);
     }
 
@@ -107,7 +107,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(householdInformations);
+        logger.info(householdInformations.toString());
         return ResponseEntity.ok(householdInformations);
     }
 
@@ -121,7 +121,7 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(person);
+        logger.info(person.toString());
         return ResponseEntity.ok(person);
     }
 
@@ -134,7 +134,8 @@ public class UrlRestController {
             return ResponseEntity.notFound().build();
         }
 
-        logger.info(emails);
+        logger.info(emails.toString());
+        logger.debug("test");
         return ResponseEntity.ok(emails);
     }
 }

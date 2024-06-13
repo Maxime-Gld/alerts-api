@@ -1,7 +1,7 @@
 package com.safetynet.alertsapi.restcontroller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/firestation")
 public class FirestationRestController {
 
-    private static final Logger logger = LogManager.getLogger(FirestationRestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FirestationRestController.class);
 
     FirestationRepository firestationRepository = new FirestationRepositoryImpl();
 
