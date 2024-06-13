@@ -1,17 +1,14 @@
 # Utilisation des profils Spring Boot avec Makefile
 
-.PHONY: build run debug noTests
+.PHONY: all build run debug noTests force
 
 # lancement de l'application par defaut
-all: build run
+all: build
 
-# compilation
+# compilation et lancement
 build:
 	mvn clean package
-
-# lancement
-run:
-    mvn spring-boot:run 
+	mvn spring-boot:run
 
 # lancement en mode debug
 debug:
