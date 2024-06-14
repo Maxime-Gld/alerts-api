@@ -27,7 +27,7 @@ public class ChildAlertService {
 
     /**
      * Récupère les informations des enfants et des adultes à partir de l'adresse
-     * donnée pur l'URL GET /childAlert
+     * donnée pour l'URL GET /childAlert
      *
      * @param address l'adresse pour effectuer la recherche
      * @return une instance de ResponseChildAlertDTO contenant la liste des enfants et la liste des adultes
