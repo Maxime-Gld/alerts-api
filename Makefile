@@ -1,6 +1,6 @@
 # Utilisation des profils Spring Boot avec Makefile
 
-.PHONY: all build run debug noTests force
+.PHONY: all build debug noTests surefire
 
 # lancement de l'application par defaut
 all: build
@@ -8,6 +8,7 @@ all: build
 # compilation et lancement
 build:
 	mvn clean package
+	mvn surefire-report:report-only
 	mvn spring-boot:run
 
 # lancement en mode debug
@@ -17,5 +18,10 @@ debug:
 # lancement sans tests
 noTests:
 	mvn spring-boot:run -DskipTests
+
+# lancement des tests + rapport
+surefire:
+	mvn surefire-report:report
+
 
 
