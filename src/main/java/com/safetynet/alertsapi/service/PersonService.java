@@ -30,11 +30,11 @@ public class PersonService {
     }
 
     /**
-     * verifie si une personne est majeur
+     * verifie si une personne est un enfant
      * 
      * @param person la personne
-     * @return true si l'age de la personne est superieur ou egale a 18
-     * @return false si l'age de la personne est inferieur a 18
+     * @return true si l'age de la personne est inferieur ou égale à 18
+     * @return false si l'age de la personne est supérieur à 18
      */
     public boolean isAChild(Person person) {
         MedicalRecord medicalRecord = getMedicalRecord(person);
