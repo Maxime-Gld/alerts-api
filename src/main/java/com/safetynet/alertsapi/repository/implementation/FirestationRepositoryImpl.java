@@ -32,7 +32,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public Firestation save(Firestation firestation) {
-        if (firestation.getStation() == null || firestation.getAddress() == null) {
+        if (firestation.getStation() == null || firestation.getAddress() == null || firestation.getStation().isEmpty()
+                || firestation.getAddress().isEmpty()) {
             return null;
         }
         firestations.add(firestation);
@@ -76,14 +77,14 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
     @Override
     public List<Firestation> findByStationNumber(String stationNumber) {
-        
+
         List<Firestation> firestationsByStationNumber = new ArrayList<>();
 
         for (Firestation firestation : firestations) {
             if (firestation.getStation().equals(stationNumber)) {
                 firestationsByStationNumber.add(firestation);
             }
-            
+
         }
 
         return firestationsByStationNumber;

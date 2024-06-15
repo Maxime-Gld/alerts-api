@@ -44,7 +44,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     @Override
     public MedicalRecord save(MedicalRecord newMedicalRecord) {
         if (newMedicalRecord.getFirstName() == null || newMedicalRecord.getLastName() == null
-                || newMedicalRecord.getBirthdate() == null) {
+                || newMedicalRecord.getBirthdate() == null || newMedicalRecord.getFirstName().isEmpty()
+                || newMedicalRecord.getLastName().isEmpty()) {
             return null;
         }
         medicalRecords.add(newMedicalRecord);

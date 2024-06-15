@@ -42,7 +42,8 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Person save(Person newPerson) {
-        if (newPerson.getFirstName() == null || newPerson.getLastName() == null) {
+        if (newPerson.getFirstName() == null || newPerson.getLastName() == null || newPerson.getFirstName().isEmpty()
+                || newPerson.getLastName().isEmpty()) {
             return null;
         }
         persons.add(newPerson);
