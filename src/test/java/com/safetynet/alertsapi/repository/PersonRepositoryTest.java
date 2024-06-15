@@ -12,19 +12,18 @@ import org.junit.jupiter.api.Test;
 import com.safetynet.alertsapi.model.Person;
 import com.safetynet.alertsapi.repository.implementation.PersonRepositoryImpl;
 
-class PersonRepositoryTest {
+public class PersonRepositoryTest {
 
     private PersonRepository personRepository;
-    
+
     @BeforeEach
     void setUp() {
         List<Person> persons = new ArrayList<>(Arrays.asList(
-            new Person("John", "Doe", "123 Main St", "New York", "10001", "123-456-7890", "jdoe@me.com"),
-            new Person("Bob", "Doe", "124 Main St", "New York", "10001", "123-456-7899", "bdoe@me.com"),
-            new Person("Jane", "Smith", "456 Elm St", "Los Angeles", "90001", "987-654-3210", "jsmith@me.com"),
-            new Person("Alice", "Johnson", "789 Oak St", "Chicago", "60601", "456-789-0123", "ajohnson@me.com"),
-            new Person("Mark", "Jobert", "789 Oak St", "Chicago", "60601", "456-789-0123", "mjobert@me.com")
-        ));
+                new Person("John", "Doe", "123 Main St", "New York", "10001", "123-456-7890", "jdoe@me.com"),
+                new Person("Bob", "Doe", "124 Main St", "New York", "10001", "123-456-7899", "bdoe@me.com"),
+                new Person("Jane", "Smith", "456 Elm St", "Los Angeles", "90001", "987-654-3210", "jsmith@me.com"),
+                new Person("Alice", "Johnson", "789 Oak St", "Chicago", "60601", "456-789-0123", "ajohnson@me.com"),
+                new Person("Mark", "Jobert", "789 Oak St", "Chicago", "60601", "456-789-0123", "mjobert@me.com")));
         personRepository = new PersonRepositoryImpl(persons);
     }
 
@@ -86,9 +85,10 @@ class PersonRepositoryTest {
         // Given
         List<Person> persons = personRepository.findAll();
         Person personBeforeUpdate = persons.get(0); // John Doe
-        Person updatePerson = new Person("John", "Doe", "123 Rue du test", "Test city", "10510", "123-456-7899", "jdoe@me.com");
+        Person updatePerson = new Person("John", "Doe", "123 Rue du test", "Test city", "10510", "123-456-7899",
+                "jdoe@me.com");
         // When
-        personRepository.update(updatePerson); 
+        personRepository.update(updatePerson);
 
         // Then
         assertFalse(persons.contains(personBeforeUpdate));
@@ -149,7 +149,7 @@ class PersonRepositoryTest {
     void testFindByLastnameNotFound() {
         // Given
         String lastname = "Test";
-        
+
         // When
         List<Person> persons = personRepository.findByLastname(lastname);
 
